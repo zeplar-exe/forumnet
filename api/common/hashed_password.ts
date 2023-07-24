@@ -1,8 +1,16 @@
 class HashedPassword {
     hashed: string
 
-    constructor(plainTextPassword: string) {
-        this.hashed = plainTextPassword
+    private constructor(hashed: string) {
+        this.hashed = hashed
+    }
+
+    static fromPlainText(plainText: string) {
+        return new HashedPassword(plainText)
+    }
+
+    static fromHashed(hashed: string) {
+        return new HashedPassword(hashed)
     }
 
     matches(other: HashedPassword) {

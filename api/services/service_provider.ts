@@ -1,4 +1,6 @@
-module.exports = {
-    "auth": require("./auth_service"),
-    "user_session": require("./user_session_service")
+var userRepository = new UserRepositoryImpl()
+
+export = {
+    "user_repository": UserRepositoryImpl,
+    "auth": new AuthServiceImpl(userRepository),
 }

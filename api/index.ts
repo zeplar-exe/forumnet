@@ -1,10 +1,10 @@
 require('dotenv').config()
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
+import express = require('express')
+import bodyParser = require('body-parser')
+import cookieParser = require('cookie-parser')
 
-const defaultServiceProvider = require('./services/service_provider.js')
+import defaultServiceProvider = require('./services/service_provider.js')
 
 const authRoute = require('./routes/authRoute.js')(defaultServiceProvider)
 
