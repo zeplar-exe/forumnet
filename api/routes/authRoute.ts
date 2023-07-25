@@ -1,32 +1,17 @@
 import { Request, Response } from 'express';
+import { ServiceProvider } from 'services/service_provider';
 
-export = function(serviceProvider) {
+export = function(serviceProvider: ServiceProvider) {
     return {
         "signUp": function(req: Request, res: Response) {
-            if (!req.body) {
-                res.status(404).end()
-                return
-            }
+            var sessionToken = serviceProvider.auth.signUp(req.body["identifier"], req.body["password"])
 
-            var result = serviceProvider.auth.signUp(req.body["identifier"], req.body["password"])
-
-            if (!result.success)
-                res.status(404).json({ message: result.message }).end()
-
-            res.status(200).cookie("session_token", result.session_token).json({ message: result.message }).end()
+            res.status(200).cookie("session_token", sessionToken).end()
         },
         "logIn": function(req: Request, res: Response) {
-            if (!req.body) {
-                res.status(404).end()
-                return
-            }
+            var sessionToken = serviceProvider.auth.logIn(req.body["identifier"], req.body["password"])
 
-            var result = serviceProvider.auth.logIn(req.body["identifier"], req.body["password"])
-
-            if (!result.success)
-                res.status(404).json({ message: result.message }).end()
-
-            res.status(200).cookie("session_token", result.session_token).json({ message: result.message }).end()
+            res.status(200).cookie("session_token", sessionToken, { sameSite: true, httpOnly: true, secure: true }).end()
         },
     }
 }

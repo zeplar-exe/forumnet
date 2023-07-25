@@ -4,7 +4,9 @@ import express = require('express')
 import bodyParser = require('body-parser')
 import cookieParser = require('cookie-parser')
 
-import defaultServiceProvider = require('./services/service_provider.js')
+import { ServiceProviderImpl } from 'services/service_provider'
+
+var defaultServiceProvider = new ServiceProviderImpl()
 
 const authRoute = require('./routes/authRoute.js')(defaultServiceProvider)
 

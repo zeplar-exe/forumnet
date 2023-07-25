@@ -1,12 +1,14 @@
-interface AuthService {
-    signUp(identifier: string, password: string): 
-        { success: boolean, session_token: string | undefined, message: string | undefined }
-    logIn(identifier: string, password: string): 
-        { success: boolean, session_token: string | undefined, message: string | undefined }
-    logOut(sessionToken: string): { success: boolean, message: string | undefined }
+import { HashedPassword } from "common/hashed_password"
+import { UserRepository } from "./user_repository"
+import { statusCodeError } from "common/error"
+
+export interface AuthService {
+    signUp(identifier: string, password: string): string
+    logIn(identifier: string, password: string): string
+    logOut(sessionToken: string): void
 }
 
-class AuthServiceImpl implements AuthService {
+export class AuthServiceImpl implements AuthService {
     sessions: Map<string, User>
     userRepository: UserRepository
 
@@ -17,35 +19,54 @@ class AuthServiceImpl implements AuthService {
 
     signUp(identifier: string, password: string) {
         if (this.userRepository.getUserByIddentifier(identifier))
-            return { success: false, session_token: undefined, message: "The given user identifier is already taken." }
+            throw statusCodeError(409, "The given user identifier is already in use.")
 
         var hashedPassword = HashedPassword.fromPlainText(password)
 
         var user = this.userRepository.createUser(identifier, hashedPassword, UserRole.Regular)
+        var sessionToken = this.createSessionToken()
 
-        var sessionToken = crypto.randomUUID()
         this.sessions[sessionToken] = user
 
-        return { success: true, session_token: sessionToken, message: "Successfully created account." }
+        return sessionToken
     }
 
     logIn(identifier: string, password: string) {
         var user = this.userRepository.getUserByIddentifier(identifier)
 
         if (!user)
-            return { success: false, session_token: undefined, message: "The given user identifier is invalid." }
+            throw statusCodeError(400, "The given user identifier is invalid.")
 
         var hashedPassword = HashedPassword.fromPlainText(password)
 
-        if (user.password !== hashedPassword)
-            return { success: false, session_token: undefined, message: "The given password is incorrect." }
+        if (user.password.matches(hashedPassword))
+            throw statusCodeError(400, "The given password is incorrect.")
 
-        return { success: true, session_token: "", message: "Successfully logged in." }
+        var sessionToken = this.getSessionByUser(user)
+
+        if (!sessionToken) {
+            sessionToken = this.createSessionToken()
+        }
+        
+        return sessionToken
     }
 
     logOut(sessionToken: string) {
         var deleteSuccess = this.sessions.delete(sessionToken)
 
-        return { success: deleteSuccess, message: deleteSuccess ? undefined : "The given session token is invalid." }
+        if (!deleteSuccess)
+            throw statusCodeError(400, "The given session token is invalid.")
+    }
+
+    getUserBySession(sessionToken: string): User | undefined {
+        return this.sessions[sessionToken]
+    }
+
+    getSessionByUser(user: User): string | undefined {
+        return Object.keys(this.sessions).find(k => this.sessions[k] == user)
+    }
+
+    private createSessionToken() {
+        return crypto.randomUUID()
     }
 }

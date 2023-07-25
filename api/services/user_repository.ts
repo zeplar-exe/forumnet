@@ -1,10 +1,12 @@
-interface UserRepository {
+import { HashedPassword } from "common/hashed_password"
+
+export interface UserRepository {
     getUserById(userId: string): User | undefined
     getUserByIddentifier(userIdentifier: string): User | undefined
     createUser(identifier: string, password: HashedPassword, role: UserRole): User
 }
 
-class UserRepositoryImpl implements UserRepository {
+export class UserRepositoryImpl implements UserRepository {
     users: Array<User>
 
     constructor() {
