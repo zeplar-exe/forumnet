@@ -67,6 +67,7 @@ export class AuthServiceImpl implements AuthService {
     }
 
     private createSessionToken() {
-        return crypto.randomUUID()
+        return crypto.randomUUID() + "-" + crypto.randomUUID() + "-" + crypto.randomUUID()
+        //  ¯\_(ツ)_/¯
     }
 }
