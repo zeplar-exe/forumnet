@@ -1,11 +1,15 @@
 import { HashedPassword } from "common/hashed_password"
 import { UserRepository } from "./user_repository"
 import { statusCodeError } from "common/error"
+import { Request } from "express"
+import { ParamsDictionary } from "express-serve-static-core"
+import { ParsedQs } from "qs"
 
 export interface AuthService {
     signUp(identifier: string, password: string): string
     logIn(identifier: string, password: string): string
     logOut(sessionToken: string): void
+    authenticate(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): User | undefined
 }
 
 export class AuthServiceImpl implements AuthService {
@@ -56,6 +60,15 @@ export class AuthServiceImpl implements AuthService {
 
         if (!deleteSuccess)
             throw statusCodeError(400, "The given session token is invalid.")
+    }
+
+    authenticate(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): User | undefined {
+        var sessionTokenCookie = req.cookies.session_token
+
+        if (!sessionTokenCookie)
+            return undefined
+
+        return this.getUserBySession(sessionTokenCookie)
     }
 
     getUserBySession(sessionToken: string): User | undefined {

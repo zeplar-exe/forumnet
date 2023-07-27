@@ -8,13 +8,15 @@ import { ServiceProviderImpl } from 'services/service_provider'
 
 var defaultServiceProvider = new ServiceProviderImpl()
 
-const authRoute = require('./routes/authRoute.js')(defaultServiceProvider)
-
 const app = express()
+const router = app.router
+
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-app.post("/auth/signup", authRoute.signUp)
-app.post("/auth/login", authRoute.logIn)
+require('./routes/authRoute.js')(router, defaultServiceProvider)
+require('./routes/forumRoute')(router, defaultServiceProvider)
+require('./routes/forumUserRoute')(router, defaultServiceProvider)
+require('./routes/postRoute')(router, defaultServiceProvider)
 
-app.listen(parseInt(process.env.PORT ?? "8080"), "localhost", () => console.log(`forumnet-api (express) listening on port ${process.env.PORT}`))
+app.listen(parseInt(process.env.PORT ?? "8080"), "localhost", () => console.log(`forumnet-api (express) listening on port ${process.env.PORT ?? "8080"}`))
