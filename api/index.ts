@@ -8,7 +8,7 @@ import cors = require('cors')
 
 import { ServiceProviderImpl } from "./services/service_provider"
 import { ServiceLayerError } from './common/http_error'
-import { UserRole } from '../models/user_role'
+import { UserRole } from './models/user_role'
 
 if (!process.env.PORT)
     throw new Error("PORT environment variable is missing.")
