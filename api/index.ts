@@ -43,4 +43,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     }
 })
 
-app.listen(parseInt(process.env.PORT ?? "8080"), "localhost", () => console.log(`forumnet-api (express) listening on port ${process.env.PORT ?? "8080"}`))
+app.listen(parseInt(process.env.PORT), "localhost", () => console.log(`forumnet-api (express) listening on port ${process.env.PORT}`))
