@@ -13,6 +13,15 @@ export = function(serviceProvider: ServiceProvider) {
     
         res.json(user).end()
     })
+
+    router.get("/users/forum_users", (req: Request, res: Response) => {
+        var user = serviceProvider.auth.authenticate(req)
+
+        if (!user)
+            throw new UnauthorizedError()
+    
+        res.json(serviceProvider.forum_user_repository.getUsersByAssociated(user.id)).end()
+    })
     
     return router
 }

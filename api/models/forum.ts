@@ -1,17 +1,15 @@
 import { randomUUID } from "crypto"
-import { ForumConfiguration } from "./forum_configuration"
 
 export class Forum {
     id: string
     name: string
-    description: string | null
-    configuration: ForumConfiguration
+    description: string
     creation_date: Date
 
     constructor(name: string) {
         this.id = randomUUID()
         this.name = name
-        this.configuration = new ForumConfiguration()
+        this.description = ""
         this.creation_date = new Date()
     }
 }

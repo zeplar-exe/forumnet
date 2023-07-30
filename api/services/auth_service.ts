@@ -23,7 +23,7 @@ export class AuthServiceImpl implements AuthService {
     }
 
     signUp(identifier: string, password: string) {
-        if (this.userRepository.getUserByIddentifier(identifier))
+        if (this.userRepository.getUserByIdentifier(identifier))
             throw new ConflictError("The given user identifier is already in use.")
 
         var hashedPassword = HashedPassword.fromPlainText(password)
@@ -37,7 +37,7 @@ export class AuthServiceImpl implements AuthService {
     }
 
     logIn(identifier: string, password: string) {
-        var user = this.userRepository.getUserByIddentifier(identifier)
+        var user = this.userRepository.getUserByIdentifier(identifier)
 
         if (!user)
             throw new BadRequestError("The given user identifier is invalid.")

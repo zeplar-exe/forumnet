@@ -7,6 +7,7 @@ import cookieParser = require('cookie-parser')
 
 import { ServiceProviderImpl } from "./services/service_provider"
 import { ServiceLayerError } from './common/http_error'
+import { UserRole } from 'models/user_role'
 
 if (!process.env.PORT)
     throw new Error("PORT environment variable is missing.")
@@ -18,6 +19,20 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cookieParser())
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+    if (defaultServiceProvider.api.getLockdownStatus()) {
+        var user = defaultServiceProvider.auth.authenticate(req)
+
+        if (!user || user.role < UserRole.SiteAdmin) {
+            res.status(503).end()
+            return
+        }
+    }
+    
+    next()
+})
+
+app.use("/", require('./routes/apiRoute')(defaultServiceProvider))
 app.use("/", require('./routes/authRoute')(defaultServiceProvider))
 app.use("/", require('./routes/forumRoute')( defaultServiceProvider))
 app.use("/", require('./routes/forumUserRoute')(defaultServiceProvider))
