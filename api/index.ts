@@ -4,6 +4,7 @@ import express = require('express')
 import { Request, Response, NextFunction } from "express"
 import bodyParser = require('body-parser')
 import cookieParser = require('cookie-parser')
+import cors = require('cors')
 
 import { ServiceProviderImpl } from "./services/service_provider"
 import { ServiceLayerError } from './common/http_error'
@@ -18,6 +19,7 @@ const app = express()
 
 app.use(bodyParser.json())
 app.use(cookieParser())
+app.use(cors())
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     if (defaultServiceProvider.api.getLockdownStatus()) {
