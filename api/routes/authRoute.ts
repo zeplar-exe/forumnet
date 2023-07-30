@@ -1,16 +1,34 @@
 import { Request, Response, Router } from 'express';
-import { ServiceProvider } from 'services/service_provider';
+import { ServiceProvider } from '../services/service_provider';
+import Joi from 'joi';
+import { createValidator } from 'express-joi-validation';
 
-export = function(router: Router, serviceProvider: ServiceProvider) {
-    router.post("/auth/signup", (req: Request, res: Response) => {
+const validator = createValidator({})
+
+export = function(serviceProvider: ServiceProvider) {
+    const router = Router()
+
+    const signupSchema = Joi.object({
+        identifier: Joi.string().required(),
+        password: Joi.string().required()
+    })
+
+    router.post("/auth/signup", validator.body(signupSchema), (req: Request, res: Response) => {
         var sessionToken = serviceProvider.auth.signUp(req.body["identifier"], req.body["password"])
 
-        res.status(200).cookie("session_token", sessionToken).end()
+        res.status(200).json({ session_token: sessionToken })
     })
 
-    router.post("/auth/login", (req: Request, res: Response) => {
+    const loginSchema = Joi.object({
+        identifier: Joi.string().required(),
+        password: Joi.string().required()
+    })
+
+    router.post("/auth/login", validator.body(loginSchema), (req: Request, res: Response) => {
         var sessionToken = serviceProvider.auth.logIn(req.body["identifier"], req.body["password"])
 
-        res.status(200).cookie("session_token", sessionToken, { sameSite: true, httpOnly: true, secure: true }).end()
+        res.status(200).json({ session_token: sessionToken })
     })
+    
+    return router
 }

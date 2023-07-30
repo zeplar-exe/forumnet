@@ -1,4 +1,7 @@
-class User {
+import { HashedPassword } from "../common/hashed_password"
+import { UserRole } from "./user_role"
+
+export class User {
     id: string
     identifier: string
     password: HashedPassword

@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto"
 import { ForumConfiguration } from "./forum_configuration"
 
 export class Forum {
@@ -8,7 +9,7 @@ export class Forum {
     creation_date: Date
 
     constructor(name: string) {
-        this.id = crypto.randomUUID()
+        this.id = randomUUID()
         this.name = name
         this.configuration = new ForumConfiguration()
         this.creation_date = new Date()

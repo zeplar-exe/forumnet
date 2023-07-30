@@ -5,17 +5,24 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/uuid": "^9.0.2",
     "body-parser": "^1.20.2",
+    "concurrently": "^8.2.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-joi-validation": "^5.0.1",
+    "joi": "^17.9.2",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.1.6",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { Forum } from "models/forum";
+import { Forum } from "../models/forum";
 
 export interface ForumRepository {
     add(forum: Forum): void

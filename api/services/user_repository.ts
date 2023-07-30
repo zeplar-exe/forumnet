@@ -1,4 +1,7 @@
-import { HashedPassword } from "common/hashed_password"
+import { randomUUID } from "crypto"
+import { HashedPassword } from "../common/hashed_password"
+import { User } from "../models/user"
+import { UserRole } from "../models/user_role"
 
 export interface UserRepository {
     getUserById(userId: string): User | undefined
@@ -22,7 +25,7 @@ export class UserRepositoryImpl implements UserRepository {
     }
 
     createUser(identifier: string, password: HashedPassword, role: UserRole) {
-        var id = crypto.randomUUID()
+        var id = randomUUID()
         var user = new User(id, identifier, password, role)
 
         this.users.push(user)

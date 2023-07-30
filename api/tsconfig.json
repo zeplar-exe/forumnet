@@ -2,6 +2,7 @@
     "compilerOptions": {
         "baseUrl": "./",
         "module": "commonjs",
+        "esModuleInterop": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noUnusedLocals": true,
@@ -9,11 +10,23 @@
         "removeComments": true,
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "ES6"
+        "target": "ES6",
+        "outDir": "dist",
+        "moduleResolution": "node",
+        "paths": {
+            "common/*": [ "common/*" ],
+            "models/*": [ "models/*" ],
+            "routes/*": [ "routes/*" ],
+            "services/*": [ "services/*" ]
+        }
     },
 
     "include": [
         "./**/*.ts",
         "./**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules", 
+        ".vscode"
     ]
 }

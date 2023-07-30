@@ -1,15 +1,16 @@
-import { HashedPassword } from "common/hashed_password"
+import { HashedPassword } from "../common/hashed_password"
 import { UserRepository } from "./user_repository"
-import { statusCodeError } from "common/error"
 import { Request } from "express"
-import { ParamsDictionary } from "express-serve-static-core"
-import { ParsedQs } from "qs"
+import { UserRole } from "../models/user_role"
+import { User } from "../models/user"
+import { randomUUID } from "crypto"
+import { ConflictError, BadRequestError } from "../common/http_error"
 
 export interface AuthService {
     signUp(identifier: string, password: string): string
     logIn(identifier: string, password: string): string
     logOut(sessionToken: string): void
-    authenticate(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): User | undefined
+    authenticate(req: Request): User | undefined
 }
 
 export class AuthServiceImpl implements AuthService {
@@ -23,7 +24,7 @@ export class AuthServiceImpl implements AuthService {
 
     signUp(identifier: string, password: string) {
         if (this.userRepository.getUserByIddentifier(identifier))
-            throw statusCodeError(409, "The given user identifier is already in use.")
+            throw new ConflictError("The given user identifier is already in use.")
 
         var hashedPassword = HashedPassword.fromPlainText(password)
 
@@ -39,17 +40,19 @@ export class AuthServiceImpl implements AuthService {
         var user = this.userRepository.getUserByIddentifier(identifier)
 
         if (!user)
-            throw statusCodeError(400, "The given user identifier is invalid.")
+            throw new BadRequestError("The given user identifier is invalid.")
 
         var hashedPassword = HashedPassword.fromPlainText(password)
 
-        if (user.password.matches(hashedPassword))
-            throw statusCodeError(400, "The given password is incorrect.")
+        if (!user.password.matches(hashedPassword))
+            throw new BadRequestError("The given password is incorrect.")
 
         var sessionToken = this.getSessionByUser(user)
 
         if (!sessionToken) {
             sessionToken = this.createSessionToken()
+
+            this.sessions[sessionToken] = user
         }
         
         return sessionToken
@@ -59,16 +62,21 @@ export class AuthServiceImpl implements AuthService {
         var deleteSuccess = this.sessions.delete(sessionToken)
 
         if (!deleteSuccess)
-            throw statusCodeError(400, "The given session token is invalid.")
+            throw new BadRequestError("The given session token is invalid.")
     }
 
-    authenticate(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): User | undefined {
-        var sessionTokenCookie = req.cookies.session_token
+    authenticate(req: Request): User | undefined {
+        var authHeader = req.headers.authorization
 
-        if (!sessionTokenCookie)
+        if (!authHeader)
             return undefined
 
-        return this.getUserBySession(sessionTokenCookie)
+        var parts = authHeader.split(' ')
+
+        if (!parts || parts.length != 2)
+            return undefined
+        
+        return this.getUserBySession(parts[1])
     }
 
     getUserBySession(sessionToken: string): User | undefined {
@@ -78,9 +86,9 @@ export class AuthServiceImpl implements AuthService {
     getSessionByUser(user: User): string | undefined {
         return Object.keys(this.sessions).find(k => this.sessions[k] == user)
     }
-
+    
     private createSessionToken() {
-        return crypto.randomUUID() + "-" + crypto.randomUUID() + "-" + crypto.randomUUID()
+        return randomUUID() + "-" + randomUUID() + "-" + randomUUID()
         //  ¯\_(ツ)_/¯
     }
 }

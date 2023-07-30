@@ -1,5 +1,5 @@
 import { pbkdf2Sync } from "crypto";
-import { assertEnvironmentVariable } from "./error";
+import { InternalError } from "./http_error";
 
 export class HashedPassword {
     private static hashIterations = 10000
@@ -11,7 +11,8 @@ export class HashedPassword {
     }
 
     static fromPlainText(plainText: string) {
-        assertEnvironmentVariable("PASSWORD_SALT")
+        if (!process.env.PASSWORD_SALT)
+            throw new InternalError()
 
         var salt = btoa(process.env.PASSWORD_SALT!)
         var hash = pbkdf2Sync(plainText, salt, this.hashIterations, 64, "sha512")
@@ -24,6 +25,17 @@ export class HashedPassword {
     }
 
     matches(other: HashedPassword) : boolean {
+        console.log(this.hashed)
+        console.log(other.hashed)
+        console.log(this.hashed === other.hashed)
         return this.hashed === other.hashed
+    }
+
+    toJSON() {
+        return this.hashed
+    }
+
+    static fromJSON(jsonString: string): HashedPassword {
+        return HashedPassword.fromHashed(jsonString);
     }
 }
