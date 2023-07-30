@@ -1,7 +1,7 @@
-import { UnauthorizedError } from 'common/http_error';
+import { UnauthorizedError } from '../common/http_error';
 import { Request, Response, Router } from 'express';
-import { UserRole } from 'models/user_role';
-import { ServiceProvider } from "services/service_provider"
+import { UserRole } from '../models/user_role';
+import { ServiceProvider } from "../services/service_provider"
 
 export = function(serviceProvider: ServiceProvider) {
     const router = Router()

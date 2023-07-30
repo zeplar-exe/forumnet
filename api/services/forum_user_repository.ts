@@ -1,5 +1,5 @@
-import { ForumUser } from "models/forum_user";
-import { User } from "models/user";
+import { ForumUser } from "../models/forum_user";
+import { User } from "../models/user";
 
 export interface ForumUserRepository {
     createUser(associated_user: User, forum_id: string, display_name: string): ForumUser
