@@ -2,6 +2,8 @@
     width: 15%;
     height: 100%;
     background-color: #b5b5b5;
+    display: flex;
+    flex-direction: column;
 }
 
 #sidebar > hr {
@@ -18,23 +20,21 @@
     flex-direction: column;
     background-color: #a3a3a3;
     transition-duration: 0.3s;
-    cursor: pointer;
 }
 
 a.sidebar-item {
-    transition-duration: 0.3s;
     cursor: pointer;
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 }
 
 a.sidebar-item:hover {
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-direction: column;
     background-color: #7d7d7d;
+}
+
+.copyright-item {
+    margin-top: auto;
 }
 
 #website-title-span {
