@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <script>
+        return
+
+        fetch("http://localhost:7987/users/me")
+            .then(response => {
+                if (response.status === 401) {
+                    location.href = "/auth"
+                } else if (response.status === 403) {
+                    location.href = "/blocked"
+                }
+            })
+            .catch(reason => {
+                alert(`An error occured while connecting to the ForumNet API: ${reason}`)
+            })
+    </script>
+    
+    <div class="fill-parent">
+        <div id="topbar" class="hbox">
+            <div id="topbar-content">
+                <span>ForumNet</span>
+            </div>
+        </div>
+
+        <div class="fill-parent hbox">
+            <div id="sidebar">
+                <a class="sidebar-item" href="/home">Home</a>
+                <a class="sidebar-item" href="/profile">Site Profile</a>
+                <hr/>
+                <a class="sidebar-item" href="/forums">Forums</a>
+                <hr/>
+                <a class="sidebar-item" href="https://github.com/zeplar-exe/forumnet" target="_blank">
+                    <div class="hbox">
+                        <img src="/images/github-logo/github-mark.svg" alt="GitHub Logo"
+                            style="width: 45%; height: 45%; object-fit: contain; margin-right: 10px;"/>    
+                        GitHub
+                    </div>
+                </a>
+                <a class="sidebar-item" href="/tos">Terms of Service</a>
+                <a class="sidebar-item" href="/privacy">Privacy Policy</a>
+                <a class="sidebar-item" href="/copyright">Copyright © 2023-2023 XXXXXX XXXXX</a>
+            </div>
+
+            <div id="main-content">
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
