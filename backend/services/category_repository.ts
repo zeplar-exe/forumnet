@@ -12,11 +12,15 @@ export class CategoryRepositoryImpl implements CategoryRepository {
         this.categories = new Array<Category>()
     }
 
-    create(name: any, description: any): Category {
-        throw new Error("Method not implemented.");
+    create(name: string, description: string): Category {
+        var category = new Category(name, description)
+
+        this.categories.push(category)
+
+        return category
     }
 
-    getCategoryById(id: any): Category | unknown {
-        throw new Error("Method not implemented.");
+    getCategoryById(id: string): Category | unknown {
+        return this.categories.find(c => c.id == id)
     }
 }
