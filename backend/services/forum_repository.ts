@@ -1,3 +1,4 @@
+import { ForumID } from "models/value_objects";
 import { Forum } from "../models/forum";
 
 export interface ForumRepository {
@@ -21,15 +22,15 @@ export class ForumRepositoryImpl implements ForumRepository {
         return forum
     }
 
-    getForumById(id: string): Forum | undefined {
+    getForumById(id: ForumID): Forum | undefined {
         return this.forums.find(forum => forum.id == id)
     }
 
-    search(page: number, count: number, name: string, description: string): Map<number, string> {
+    search(page: number, count: number, name: string, description: string): Map<number, ForumID> {
         var nameParts = (name as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
         var descriptionParts = (description as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
 
-        var map = new Map<number, string>()
+        var map = new Map<number, ForumID>()
 
         this.forums.forEach(forum => {
             var nameCount = 0

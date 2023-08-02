@@ -1,9 +1,10 @@
+import { CategoryName, ForumUserID, PostID, UserID } from "models/value_objects";
 import { Post } from "../models/post";
 
 export interface PostRepository {
-    create(title: any, body: any, category: string, author_forum_user_id: string): Post;
-    getPostById(post_id: string): Post | undefined;
-    search(page: number, count: number, title: string, body: string): Map<number, string>;
+    create(title: any, body: any, category: CategoryName, author_forum_user_id: ForumUserID): Post;
+    getPostById(post_id: PostID): Post | undefined;
+    search(page: number, count: number, title: string, body: string): Map<number, PostID>;
 }
 
 export class PostRepositoryImpl implements PostRepository {
@@ -13,15 +14,15 @@ export class PostRepositoryImpl implements PostRepository {
         this.posts = new Array<Post>()
     }
 
-    create(title: string, body: string, category_id: string, author_forum_user_id: string): Post {
-        var post = new Post(title, body, category_id, author_forum_user_id)
+    create(title: string, body: string, category: CategoryName, author_forum_user_id: ForumUserID): Post {
+        var post = new Post(title, body, category, author_forum_user_id)
 
         this.posts.push(post)
 
         return post
     }
 
-    getPostById(post_id: string): Post | undefined {
+    getPostById(post_id: PostID): Post | undefined {
         return this.posts.find(p => p.id == post_id)
     }
 

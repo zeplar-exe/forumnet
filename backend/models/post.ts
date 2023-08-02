@@ -1,18 +1,19 @@
 import { randomUUID } from "crypto"
+import { CategoryName, ForumUserID, PostID } from "./value_objects"
 
 export class Post {
-    id: string
+    id: PostID
     title: string
     body: string
-    category_id: string
-    author_forum_user_id: string
+    category: CategoryName
+    author_forum_user_id: ForumUserID
     creation_date: Date
 
-    constructor(title: string, body: string, category_id: string, author_forum_user_id: string) {
+    constructor(title: string, body: string, category: CategoryName, author_forum_user_id: ForumUserID) {
         this.id = randomUUID()
         this.title = title
         this.body = body
-        this.category_id = category_id
+        this.category = category
         this.author_forum_user_id = author_forum_user_id
         this.creation_date = new Date()
     }

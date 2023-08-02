@@ -5,20 +5,21 @@ import { UserRole } from "../models/user_role"
 import { User } from "../models/user"
 import { randomUUID } from "crypto"
 import { ConflictError, BadRequestError } from "../common/http_error"
+import { SessionToken, UserIdentifier } from "../models/value_objects"
 
 export interface AuthService {
-    signUp(identifier: string, password: string): string
-    logIn(identifier: string, password: string): string
-    logOut(sessionToken: string): void
+    signUp(identifier: UserIdentifier, password: string): string
+    logIn(identifier: UserIdentifier, password: string): string
+    logOut(sessionToken: SessionToken): void
     authenticate(req: Request): User | undefined
 }
 
 export class AuthServiceImpl implements AuthService {
-    sessions: Map<string, User>
+    sessions: Map<SessionToken, User>
     userRepository: UserRepository
 
     constructor(userRepository: UserRepository) {
-        this.sessions = new Map<string, User>()
+        this.sessions = new Map<SessionToken, User>()
         this.userRepository = userRepository
 
         if (process.env.NODE_ENV === "dev") {
@@ -29,7 +30,7 @@ export class AuthServiceImpl implements AuthService {
         }
     }
 
-    signUp(identifier: string, password: string) {
+    signUp(identifier: UserIdentifier, password: string) {
         if (this.userRepository.getUserByIdentifier(identifier))
             throw new ConflictError("The given user identifier is already in use.")
 
@@ -43,7 +44,7 @@ export class AuthServiceImpl implements AuthService {
         return sessionToken
     }
 
-    logIn(identifier: string, password: string) {
+    logIn(identifier: UserIdentifier, password: string) {
         var user = this.userRepository.getUserByIdentifier(identifier)
 
         if (!user)
@@ -65,7 +66,7 @@ export class AuthServiceImpl implements AuthService {
         return sessionToken
     }
 
-    logOut(sessionToken: string) {
+    logOut(sessionToken: SessionToken) {
         var deleteSuccess = this.sessions.delete(sessionToken)
 
         if (!deleteSuccess)
@@ -86,8 +87,8 @@ export class AuthServiceImpl implements AuthService {
         return this.getUserBySession(parts[1])
     }
 
-    getUserBySession(sessionToken: string): User | undefined {
-        return this.sessions[sessionToken]
+    getUserBySession(sessionToken: SessionToken): User | undefined {
+        return this.sessions.get(sessionToken)
     }
 
     getSessionByUser(user: User): string | undefined {

@@ -1,7 +1,8 @@
 import { randomUUID } from "crypto"
+import { ForumID } from "./value_objects"
 
 export class Forum {
-    id: string
+    id: ForumID
     name: string
     description: string
     creation_date: Date

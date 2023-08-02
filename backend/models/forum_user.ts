@@ -1,14 +1,15 @@
 import { randomUUID } from "crypto"
+import { ForumID, ForumUserID, UserID } from "./value_objects"
 
 export class ForumUser {
-    id: string
-    associated_user_id: string
-    forum_id: string
+    id: ForumUserID
+    associated_user_id: UserID
+    forum_id: ForumID
     display_name: string
     biography: string
     links: Array<string>
 
-    constructor(associated_user_id: string, forum_id: string, display_name: string) {
+    constructor(associated_user_id: UserID, forum_id: ForumID, display_name: string) {
         this.id = randomUUID()
         this.associated_user_id = associated_user_id
         this.forum_id = forum_id
