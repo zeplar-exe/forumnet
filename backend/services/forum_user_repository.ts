@@ -1,11 +1,10 @@
 import { ForumUser } from "../models/forum_user";
-import { User } from "../models/user";
 
 export interface ForumUserRepository {
-    createUser(associated_user: User, forum_id: string, display_name: string): ForumUser
+    createUser(associated_user_id: string, forum_id: string, display_name: string): ForumUser
     getUserById(id: string): ForumUser | undefined
-    getUsersByAssociated(associated_user_id: string): Array<ForumUser> | undefined
-    getUsersByForumId(forum_id: string): Array<ForumUser> | undefined
+    getUsersByAssociated(associated_user_id: string): Array<ForumUser>
+    getUsersByForumId(forum_id: string): Array<ForumUser>
 }
 
 export class ForumUserRepositoryImpl implements ForumUserRepository {
@@ -15,8 +14,8 @@ export class ForumUserRepositoryImpl implements ForumUserRepository {
         this.users = new Array<ForumUser>()
     }
 
-    createUser(associated_user: User, forum_id: string, display_name: string): ForumUser {
-        var user = new ForumUser(associated_user, forum_id, display_name)
+    createUser(associated_user_id: string, forum_id: string, display_name: string): ForumUser {
+        var user = new ForumUser(associated_user_id, forum_id, display_name)
 
         this.users.push(user)
 
@@ -27,11 +26,11 @@ export class ForumUserRepositoryImpl implements ForumUserRepository {
         return this.users.find(user => user.id == id)
     }
 
-    getUsersByAssociated(associated_user_id: string): Array<ForumUser> | undefined {
+    getUsersByAssociated(associated_user_id: string): Array<ForumUser> {
         return this.users.filter((user) => user.associated_user_id == associated_user_id)
     }
 
-    getUsersByForumId(forum_id: string): Array<ForumUser> | undefined {
+    getUsersByForumId(forum_id: string): Array<ForumUser> {
         return this.users.filter((user) => user.forum_id == forum_id)
     }
 }

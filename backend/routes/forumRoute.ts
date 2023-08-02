@@ -32,12 +32,14 @@ export = function(serviceProvider: ServiceProvider) {
     })
 
     router.get('/forums/search', validator.query(searchSchema), (req: Request, res: Response) => {
+        var page = parseInt(req.query.page as string)
+        var count = parseInt(req.query.count as string)
         var nameParts = (req.query.name as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
         var descriptionParts = (req.query.name as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
 
-        var map = serviceProvider.forum_repository.search(parseInt(req.query.page as string), parseInt(req.query.count as string) as number, nameParts, descriptionParts)
+        var map = serviceProvider.forum_repository.search(page, count, nameParts, descriptionParts)
 
-        return res.json(map).end()
+        res.json(map).end()
     })
 
     router.post('/forums/create', validator.body(createSchema), (req: Request, res: Response) => {
@@ -49,8 +51,13 @@ export = function(serviceProvider: ServiceProvider) {
         var forum = serviceProvider.forum_repository.createForum(req.body.name)
         forum.description = req.body.description
 
-        var forumUser = serviceProvider.forum_user_repository.createUser(user, forum.id, "owner")
+        var forumUser = serviceProvider.forum_user_repository.createUser(user.id, forum.id, "owner")
         forumUser.is_owner = true
+
+        res.json({ 
+            forum: forum.id,
+            forum_user: forumUser.id
+        }).end()
     })
     
     return router

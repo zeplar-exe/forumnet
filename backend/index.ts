@@ -34,7 +34,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next()
 })
 
-app.use("/", require('./routes/apiRoute')(defaultServiceProvider))
+app.use("/", require('./routes/admin/apiRoute')(defaultServiceProvider))
 app.use("/", require('./routes/authRoute')(defaultServiceProvider))
 app.use("/", require('./routes/forumRoute')( defaultServiceProvider))
 app.use("/", require('./routes/forumUserRoute')(defaultServiceProvider))
