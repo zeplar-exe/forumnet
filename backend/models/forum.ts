@@ -5,13 +5,14 @@ export class Forum {
     name: string
     description: string
     creation_date: Date
-    categories: Array<string>
+    posts: Array<string>
+    owner: string | undefined
 
     constructor(name: string) {
         this.id = randomUUID()
         this.name = name
         this.description = ""
+        this.posts = new Array<string>()
         this.creation_date = new Date()
-        this.categories = new Array<string>()
     }
 }

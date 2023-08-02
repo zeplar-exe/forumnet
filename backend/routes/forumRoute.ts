@@ -43,7 +43,7 @@ export = function(serviceProvider: ServiceProvider) {
         forum.description = req.body.description
 
         var forumUser = serviceProvider.forum_user_repository.createUser(user.id, forum.id, "owner")
-        forumUser.is_owner = true
+        forum.owner = forumUser.id
 
         res.status(201).json({ 
             forum: forum.id,
@@ -63,36 +63,10 @@ export = function(serviceProvider: ServiceProvider) {
         res.json(forum).end()
     })
 
-    const createCategorySchema = Joi.object({
-        category: Joi.string().optional(),
-        name: Joi.string().required(),
-        description: Joi.string().required()
-    })
-
-    router.post('/forums/categories/create', validator.query(forumIdQuerySchema), validator.body(createCategorySchema), (req: Request, res: Response) => {
-        var user = serviceProvider.auth.authenticate(req)
-        
-        if (!user)
-            throw new UnauthorizedError()
-
-        var forumId = req.query.forum_id as string
-        var forum = serviceProvider.forum_repository.getForumById(forumId)
-
-        if (!forum)
-            throw new BadRequestError("The given forum does not exist.")
-
-        requireUserCanAccessForum(serviceProvider, user, forum)
-
-        var category = serviceProvider.category_repository.create(req.body.name, req.body.description)
-        forum.categories.push(category.id)
-
-        res.status(201).json({ category: category.id }).end()
-    })
-
     const createPostSchema = Joi.object({
-        category: Joi.string().required(),
         title: Joi.string().required(),
-        body: Joi.string().required()
+        body: Joi.string().required(),
+        category: Joi.string().required()
     })
 
     router.post('/forums/posts/create', validator.query(forumIdQuerySchema), validator.body(createPostSchema), (req: Request, res: Response) => {
@@ -109,16 +83,13 @@ export = function(serviceProvider: ServiceProvider) {
 
         requireUserCanAccessForum(serviceProvider, user, forum)
 
-        var category = serviceProvider.category_repository.getCategoryById(forum.categories.find(req.body.category))
-
-        if (!category)
-            throw new BadRequestError("The given category does not exist.")
-
         var title = req.body.title
         var body = req.body.description
+        var category = req.body.category
 
-        var post = serviceProvider.post_repository.create(title, body, user.id)
-        category.posts.push(post)
+        var post = serviceProvider.post_repository.create(title, body, category, user.id)
+
+        forum.posts.push(post.id)
 
         res.status(201).json({ post: post.id }).end()
     })

@@ -7,7 +7,6 @@ export class ForumUser {
     display_name: string
     biography: string
     links: Array<string>
-    is_owner: boolean
 
     constructor(associated_user_id: string, forum_id: string, display_name: string) {
         this.id = randomUUID()
