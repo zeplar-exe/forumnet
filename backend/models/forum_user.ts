@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto"
-import { User } from "./user"
 
 export class ForumUser {
     id: string

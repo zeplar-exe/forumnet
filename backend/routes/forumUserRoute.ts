@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { ServiceProvider } from "../services/service_provider"
 import { createValidator } from 'express-joi-validation';
 import Joi from 'joi';
-import { ConflictError, UnauthorizedError } from 'common/http_error';
+import { ConflictError, UnauthorizedError } from '../common/http_error';
 
 const validator = createValidator({})
 

@@ -5,11 +5,13 @@ export class Forum {
     name: string
     description: string
     creation_date: Date
+    categories: Array<string>
 
     constructor(name: string) {
         this.id = randomUUID()
         this.name = name
         this.description = ""
         this.creation_date = new Date()
+        this.categories = new Array<string>()
     }
 }

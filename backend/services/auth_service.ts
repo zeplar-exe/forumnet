@@ -20,6 +20,13 @@ export class AuthServiceImpl implements AuthService {
     constructor(userRepository: UserRepository) {
         this.sessions = new Map<string, User>()
         this.userRepository = userRepository
+
+        if (process.env.NODE_ENV === "dev") {
+            var user = this.userRepository.createUser("dev_admin", HashedPassword.fromPlainText("dev_woop"), UserRole.Owner)
+            this.sessions["dev"] = user
+
+            console.log("Setup dev_admin user account.")
+        }
     }
 
     signUp(identifier: string, password: string) {
