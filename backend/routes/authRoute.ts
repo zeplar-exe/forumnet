@@ -9,7 +9,7 @@ export = function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     const signupSchema = Joi.object({
-        identifier: Joi.string().required(),
+        identifier: Joi.string().required().min(1),
         password: Joi.string().required()
     })
 

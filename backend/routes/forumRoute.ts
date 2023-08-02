@@ -20,10 +20,10 @@ export = function(serviceProvider: ServiceProvider) {
     router.get('/forums/search', validator.query(searchSchema), (req: Request, res: Response) => {
         var page = parseInt(req.query.page as string)
         var count = parseInt(req.query.count as string)
-        var nameParts = (req.query.name as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
-        var descriptionParts = (req.query.name as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
+        var name = req.query.name as string
+        var description = req.query.description as string
 
-        var map = serviceProvider.forum_repository.search(page, count, nameParts, descriptionParts)
+        var map = serviceProvider.forum_repository.search(page, count, name, description)
 
         res.json(map).end()
     })
@@ -62,6 +62,39 @@ export = function(serviceProvider: ServiceProvider) {
 
         res.json(forum).end()
     })
+
+    const postIdQuerySchema = Joi.object({ post_id: Joi.string().required() })
+
+    router.post('/forums/posts/info', validator.query(postIdQuerySchema), (req: Request, res: Response) => {
+        var postId = req.query.post_id as string
+        var post = serviceProvider.post_repository.getPostById(postId)
+
+        if (!post)
+            throw new BadRequestError("The given post does not exist.")
+
+        res.json(post).end()
+    })
+
+    const searchPostsSchema = Joi.object({
+        page: Joi.number().integer().min(1).default(1),
+        count: Joi.number().integer().min(1).max(100).default(10),
+        title: Joi.string().required(),
+        body: Joi.string().optional().default("")
+    })
+
+    router.post('/forums/posts/search', 
+        validator.query(forumIdQuerySchema),
+        validator.body(searchPostsSchema), 
+        (req: Request, res: Response) => {
+            var page = parseInt(req.query.page as string)
+            var count = parseInt(req.query.count as string)
+            var title = req.query.title as string
+            var body = req.query.body as string
+
+            var map = serviceProvider.post_repository.search(page, count, title, body)
+
+            res.json(map).end()
+        })
 
     const createPostSchema = Joi.object({
         title: Joi.string().required(),

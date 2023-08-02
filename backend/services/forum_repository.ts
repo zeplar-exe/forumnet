@@ -1,7 +1,7 @@
 import { Forum } from "../models/forum";
 
 export interface ForumRepository {
-    search(page: number, count: number, nameParts: Array<string>, descriptionParts: Array<string>): void;
+    search(page: number, count: number, name: string, description: string): void;
     createForum(name: string): Forum
     getForumById(id: string): Forum | undefined
 }
@@ -25,7 +25,10 @@ export class ForumRepositoryImpl implements ForumRepository {
         return this.forums.find(forum => forum.id == id)
     }
 
-    search(page: number, count: number, nameParts: string[], descriptionParts: string[]): Map<number, string> {
+    search(page: number, count: number, name: string, description: string): Map<number, string> {
+        var nameParts = (name as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
+        var descriptionParts = (description as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
+
         var map = new Map<number, string>()
 
         this.forums.forEach(forum => {
