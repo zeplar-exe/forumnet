@@ -2,12 +2,26 @@ import { Request, Response, Router } from 'express';
 import { ServiceProvider } from "../services/service_provider"
 import { createValidator } from 'express-joi-validation';
 import Joi from 'joi';
-import { ConflictError, UnauthorizedError } from '../common/http_error';
+import { BadRequestError, ConflictError, UnauthorizedError } from '../common/http_error';
 
 const validator = createValidator({})
 
 export = function(serviceProvider: ServiceProvider) {
     const router = Router()
+
+    router.get("/forum_users/:forum_user_id", (req: Request, res: Response) => {
+        var user = serviceProvider.auth.authenticate(req)
+
+        if (!user)
+            throw new UnauthorizedError()
+
+        var forumUser = serviceProvider.forum_user_repository.getUserById(req.params.forum_user_id)
+
+        if (!forumUser)
+            throw new BadRequestError("The given forum user does not exist.")
+
+        res.status(200).json(forumUser)
+    })
 
     const createSchema = Joi.object({
         forum: Joi.string().required(),
@@ -31,7 +45,9 @@ export = function(serviceProvider: ServiceProvider) {
         
         var forumUser = serviceProvider.forum_user_repository.createUser(user.id, forumId, req.body.display_name)
 
-        res.json({ forum_user: forumUser }).end()
+        res.status(200)
+            .setHeader("Location", `/forum_users/${forumUser.id}`)
+            .json({ forum_user: forumUser })
     })
     
     return router

@@ -25,7 +25,7 @@ export = function(serviceProvider: ServiceProvider) {
 
         var map = serviceProvider.forum_repository.search(page, count, name, description)
 
-        res.json(map).end()
+        res.status(200).json(map)
     })
 
     const createSchema = Joi.object({
@@ -35,6 +35,7 @@ export = function(serviceProvider: ServiceProvider) {
 
     router.post('/forums/create', validator.body(createSchema), (req: Request, res: Response) => {
         var user = serviceProvider.auth.authenticate(req)
+
         if (!user)
             throw new UnauthorizedError()
         
@@ -44,10 +45,12 @@ export = function(serviceProvider: ServiceProvider) {
         var forumUser = serviceProvider.forum_user_repository.createUser(user.id, forum.id, "owner")
         forum.owner = forumUser.id
 
-        res.status(201).json({ 
-            forum: forum.id,
-            forum_user: forumUser.id
-        }).end()
+        res.status(201)
+            .setHeader("Location", `/forums/${forum.id}`)
+            .json({ 
+                forum: forum.id,
+                forum_user: forumUser.id
+            })
     })
 
     router.get('/forums/:forum_id', (req: Request, res: Response) => {
@@ -57,7 +60,7 @@ export = function(serviceProvider: ServiceProvider) {
         if (!forum)
             throw new BadRequestError("The given forum does not exist.")
 
-        res.json(forum).end()
+        res.status(200).json(forum)
     })
 
     const searchPostsSchema = Joi.object({
@@ -82,7 +85,7 @@ export = function(serviceProvider: ServiceProvider) {
 
             var map = serviceProvider.post_repository.search(page, count, forum.id, title, body)
 
-            res.json(map).end()
+            res.status(200).json(map)
         })
 
     const createPostSchema = Joi.object({
@@ -111,7 +114,9 @@ export = function(serviceProvider: ServiceProvider) {
 
         var post = serviceProvider.post_repository.create(title, body, category, forumId, user.id)
 
-        res.status(201).json({ post: post.id }).end()
+        res.status(201)
+            .setHeader("Location", `/forums/${forum.id}/posts/${post.id}`)
+            .json({ post: post.id })
     })
 
     router.get('/forums/:forum_id/posts/:post_id', (req: Request, res: Response) => {
@@ -121,7 +126,7 @@ export = function(serviceProvider: ServiceProvider) {
         if (!post)
             throw new BadRequestError("The given post does not exist.")
 
-        res.json(post).end()
+        res.status(200).json(post)
     })
     
     return router

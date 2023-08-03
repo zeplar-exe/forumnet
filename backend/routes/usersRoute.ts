@@ -11,7 +11,7 @@ export = function(serviceProvider: ServiceProvider) {
         if (!user)
             throw new UnauthorizedError()
     
-        res.json(user).end()
+        res.status(200).json(user)
     })
 
     router.get("/users/forum_users", (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ export = function(serviceProvider: ServiceProvider) {
         if (!user)
             throw new UnauthorizedError()
     
-        res.json(serviceProvider.forum_user_repository.getUsersByAssociated(user.id)).end()
+        res.status(200).json(serviceProvider.forum_user_repository.getUsersByAssociated(user.id))
     })
     
     return router
