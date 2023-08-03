@@ -1,10 +1,10 @@
-import { CategoryName, ForumUserID, PostID, UserID } from "models/value_objects";
+import { CategoryName, ForumID, ForumUserID, PostID } from "../models/value_objects";
 import { Post } from "../models/post";
 
 export interface PostRepository {
-    create(title: any, body: any, category: CategoryName, author_forum_user_id: ForumUserID): Post;
+    create(title: any, body: any, category: CategoryName, forum_id: ForumID, author_forum_user_id: ForumUserID): Post;
     getPostById(post_id: PostID): Post | undefined;
-    search(page: number, count: number, title: string, body: string): Map<number, PostID>;
+    search(page: number, count: number, forum_id: ForumID, title: string, body: string): Map<number, PostID>;
 }
 
 export class PostRepositoryImpl implements PostRepository {
@@ -14,8 +14,8 @@ export class PostRepositoryImpl implements PostRepository {
         this.posts = new Array<Post>()
     }
 
-    create(title: string, body: string, category: CategoryName, author_forum_user_id: ForumUserID): Post {
-        var post = new Post(title, body, category, author_forum_user_id)
+    create(title: string, body: string, category: CategoryName, forum_id: ForumID, author_forum_user_id: ForumUserID): Post {
+        var post = new Post(title, body, category, forum_id, author_forum_user_id)
 
         this.posts.push(post)
 
@@ -26,7 +26,11 @@ export class PostRepositoryImpl implements PostRepository {
         return this.posts.find(p => p.id == post_id)
     }
 
-    search(page: number, count: number, title: string, body: string): Map<number, string> {
+    getPostsByForum(forum_id: ForumID): Post | undefined {
+        return this.posts.find(p => p.forum_id == forum_id)
+    }
+
+    search(page: number, count: number, forum_id: ForumID, title: string, body: string): Map<number, string> {
         var nameParts = (title as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
         var descriptionParts = (body as string).split(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
 

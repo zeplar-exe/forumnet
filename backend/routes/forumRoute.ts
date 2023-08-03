@@ -35,7 +35,6 @@ export = function(serviceProvider: ServiceProvider) {
 
     router.post('/forums/create', validator.body(createSchema), (req: Request, res: Response) => {
         var user = serviceProvider.auth.authenticate(req)
-
         if (!user)
             throw new UnauthorizedError()
         
@@ -51,28 +50,14 @@ export = function(serviceProvider: ServiceProvider) {
         }).end()
     })
 
-    const forumIdQuerySchema = Joi.object({ forum_id: Joi.string().required() })
-
-    router.get('/forums/info', validator.query(forumIdQuerySchema), (req: Request, res: Response) => {
-        var forumId = req.query.forum_id as string
+    router.get('/forums/:forum_id', (req: Request, res: Response) => {
+        var forumId = req.params.forum_id
         var forum = serviceProvider.forum_repository.getForumById(forumId)
 
         if (!forum)
             throw new BadRequestError("The given forum does not exist.")
 
         res.json(forum).end()
-    })
-
-    const postIdQuerySchema = Joi.object({ post_id: Joi.string().required() })
-
-    router.post('/forums/posts/info', validator.query(postIdQuerySchema), (req: Request, res: Response) => {
-        var postId = req.query.post_id as string
-        var post = serviceProvider.post_repository.getPostById(postId)
-
-        if (!post)
-            throw new BadRequestError("The given post does not exist.")
-
-        res.json(post).end()
     })
 
     const searchPostsSchema = Joi.object({
@@ -82,16 +67,20 @@ export = function(serviceProvider: ServiceProvider) {
         body: Joi.string().optional().default("")
     })
 
-    router.post('/forums/posts/search', 
-        validator.query(forumIdQuerySchema),
+    router.get('/forums/:forum_id/posts/search',
         validator.body(searchPostsSchema), 
         (req: Request, res: Response) => {
+            var forum = serviceProvider.forum_repository.getForumById(req.params.forum_id)
+
+            if (!forum)
+                throw new BadRequestError("The given forum does not exist.")
+
             var page = parseInt(req.query.page as string)
             var count = parseInt(req.query.count as string)
             var title = req.query.title as string
             var body = req.query.body as string
 
-            var map = serviceProvider.post_repository.search(page, count, title, body)
+            var map = serviceProvider.post_repository.search(page, count, forum.id, title, body)
 
             res.json(map).end()
         })
@@ -102,13 +91,13 @@ export = function(serviceProvider: ServiceProvider) {
         category: Joi.string().required()
     })
 
-    router.post('/forums/posts/create', validator.query(forumIdQuerySchema), validator.body(createPostSchema), (req: Request, res: Response) => {
+    router.post('/forums/:forum_id/posts/create', validator.body(createPostSchema), (req: Request, res: Response) => {
         var user = serviceProvider.auth.authenticate(req)
         
         if (!user)
             throw new UnauthorizedError()
 
-        var forumId = req.query.forum_id as string
+        var forumId = req.params.forum_id
         var forum = serviceProvider.forum_repository.getForumById(forumId)
 
         if (!forum)
@@ -120,11 +109,19 @@ export = function(serviceProvider: ServiceProvider) {
         var body = req.body.description
         var category = req.body.category
 
-        var post = serviceProvider.post_repository.create(title, body, category, user.id)
-
-        forum.posts.push(post.id)
+        var post = serviceProvider.post_repository.create(title, body, category, forumId, user.id)
 
         res.status(201).json({ post: post.id }).end()
+    })
+
+    router.get('/forums/:forum_id/posts/:post_id', (req: Request, res: Response) => {
+        var postId = req.params.post_id
+        var post = serviceProvider.post_repository.getPostById(postId)
+
+        if (!post)
+            throw new BadRequestError("The given post does not exist.")
+
+        res.json(post).end()
     })
     
     return router
