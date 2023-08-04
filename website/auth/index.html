@@ -1,15 +1,25 @@
 <html>
 
+<head>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
 <body>
     <script src="js/index.js"></script>
 
-    <div id="login-data">
-        <input type="text" id="identifier" placeholder="User Identifier">
-        <input type="text" id="password" placeholder="Password">
+    <div id="login-screen">
+        <input type="text" id="login_identifier" placeholder="User Identifier">
+        <input type="text" id="login_password" placeholder="Password">
         <button onclick="login_credentials()">Log In</button>
     </div>
-    
-    <button onclick="signup()">Create an account</button>
+
+    <br/>
+
+    <div id="signup-screen">
+        <input type="text" id="signup_identifier" placeholder="User Identifier">
+            <input type="text" id="signup_password" placeholder="Password">
+            <button onclick="signup_credentials()">Create Account</button>
+    </div>
 </body>
 
 </html>

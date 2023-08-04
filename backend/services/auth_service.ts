@@ -15,11 +15,11 @@ export interface AuthService {
 }
 
 export class AuthServiceImpl implements AuthService {
-    sessions: Map<SessionToken, User>
+    sessions: Map<string, User>
     userRepository: UserRepository
 
     constructor(userRepository: UserRepository) {
-        this.sessions = new Map<SessionToken, User>()
+        this.sessions = new Map<string, User>()
         this.userRepository = userRepository
 
         if (process.env.NODE_ENV === "dev") {
@@ -67,7 +67,7 @@ export class AuthServiceImpl implements AuthService {
     }
 
     logOut(sessionToken: SessionToken) {
-        var deleteSuccess = this.sessions.delete(sessionToken)
+        var deleteSuccess = this.sessions.delete(sessionToken.toString())
 
         if (!deleteSuccess)
             throw new BadRequestError("The given session token is invalid.")
@@ -83,12 +83,12 @@ export class AuthServiceImpl implements AuthService {
 
         if (!parts || parts.length != 2)
             return undefined
-        
+
         return this.getUserBySession(parts[1])
     }
 
     getUserBySession(sessionToken: SessionToken): User | undefined {
-        return this.sessions.get(sessionToken)
+        return this.sessions[sessionToken.toString()]
     }
 
     getSessionByUser(user: User): string | undefined {
