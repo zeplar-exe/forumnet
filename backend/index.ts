@@ -37,8 +37,8 @@ async function setup()
         name: "forumnet.maria.db",
         dbName: "forumnet",
         type: "mariadb",
-        host: "localhost",
-        port: 3306,
+        host: process.env.MARIADB_HOST,
+        port: parseInt(process.env.MARIADB_PORT ?? "error"),
         user: process.env.MARIADB_USER,
         password: process.env.MARIADB_PASSWORD
     }).catch(
