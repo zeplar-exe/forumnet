@@ -8,7 +8,7 @@ import cors = require('cors')
 
 import { ServiceProviderImpl } from "./services/service_provider"
 import { ServiceLayerError } from './common/http_error'
-import { UserRole } from './models/user_role'
+import { UserRole } from './models/entities/user_role'
 
 if (!process.env.PORT)
     throw new Error("PORT environment variable is missing.")
@@ -21,9 +21,9 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(cors())
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-    if (defaultServiceProvider.api.getLockdownStatus()) {
-        var user = defaultServiceProvider.auth.authenticate(req)
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+    if (await defaultServiceProvider.api.getLockdownStatus()) {
+        var user = await defaultServiceProvider.auth.authenticate(req)
 
         if (!user || user.role < UserRole.SiteAdmin) {
             res.status(503).end()

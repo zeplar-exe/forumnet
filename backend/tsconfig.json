@@ -3,6 +3,8 @@
         "baseUrl": "./",
         "module": "commonjs",
         "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noUnusedLocals": true,
@@ -10,7 +12,7 @@
         "removeComments": true,
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "ES6",
+        "target": "ES2022",
         "outDir": "dist",
         "moduleResolution": "node",
         "paths": {

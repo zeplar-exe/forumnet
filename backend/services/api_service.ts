@@ -1,16 +1,21 @@
 export interface ApiService {
-    getLockdownStatus(): boolean
-    setLockdownStatus(is_locked: boolean)
+    init(): Promise<void>
+    getLockdownStatus(): Promise<boolean>
+    setLockdownStatus(is_locked: boolean): Promise<void>
 }
 
 export class ApiServiceImpl implements ApiService {
     is_locked: boolean
+    
+    async init() {
 
-    getLockdownStatus(): boolean {
+    }
+
+    async getLockdownStatus() {
         return this.is_locked
     }
 
-    setLockdownStatus(is_locked: boolean) {
+    async setLockdownStatus(is_locked: boolean) {
         this.is_locked = is_locked
     }
 }

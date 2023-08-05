@@ -1,51 +1,56 @@
 import { HashedPassword } from "../common/hashed_password"
-import { UserRepository } from "./user_repository"
 import { Request } from "express"
-import { UserRole } from "../models/user_role"
-import { User } from "../models/user"
+import { UserRole } from "../models/entities/user_role"
+import { User } from "../models/entities/user"
 import { randomUUID } from "crypto"
 import { ConflictError, BadRequestError } from "../common/http_error"
 import { SessionToken, UserIdentifier } from "../models/value_objects"
+import { orm } from "db"
 
 export interface AuthService {
-    signUp(identifier: UserIdentifier, password: string): string
-    logIn(identifier: UserIdentifier, password: string): string
-    logOut(sessionToken: SessionToken): void
-    authenticate(req: Request): User | undefined
+    init(): Promise<void>
+    signUp(identifier: UserIdentifier, password: string): Promise<string>
+    logIn(identifier: UserIdentifier, password: string): Promise<string>
+    logOut(sessionToken: SessionToken): Promise<void>
+    authenticate(req: Request): Promise<User | undefined>
 }
 
 export class AuthServiceImpl implements AuthService {
     sessions: Map<string, User>
-    userRepository: UserRepository
 
-    constructor(userRepository: UserRepository) {
+    async init() {
         this.sessions = new Map<string, User>()
-        this.userRepository = userRepository
 
         if (process.env.NODE_ENV === "dev") {
-            var user = this.userRepository.createUser("dev_admin", HashedPassword.fromPlainText("dev_woop"), UserRole.Owner)
+            var user = new User("dev_admin", HashedPassword.fromPlainText("dev_woop"), UserRole.Owner)
             this.sessions["dev"] = user
+
+            await orm.em.persistAndFlush(user)
 
             console.log("Setup dev_admin user account.")
         }
     }
 
-    signUp(identifier: UserIdentifier, password: string) {
-        if (this.userRepository.getUserByIdentifier(identifier))
+    async signUp(identifier: UserIdentifier, password: string) {
+        var existing = await orm.em.findOne(User, { identifier: identifier })
+
+        if (existing)
             throw new ConflictError("The given user identifier is already in use.")
 
         var hashedPassword = HashedPassword.fromPlainText(password)
 
-        var user = this.userRepository.createUser(identifier, hashedPassword, UserRole.Regular)
+        var user = new User(identifier, hashedPassword, UserRole.Regular)
         var sessionToken = this.createSessionToken()
 
         this.sessions[sessionToken] = user
 
+        await orm.em.persistAndFlush(user)
+
         return sessionToken
     }
 
-    logIn(identifier: UserIdentifier, password: string) {
-        var user = this.userRepository.getUserByIdentifier(identifier)
+    async logIn(identifier: UserIdentifier, password: string) {
+        var user = await orm.em.findOne(User, { identifier: identifier })
 
         if (!user)
             throw new BadRequestError("The given user identifier is invalid.")
@@ -66,14 +71,14 @@ export class AuthServiceImpl implements AuthService {
         return sessionToken
     }
 
-    logOut(sessionToken: SessionToken) {
+    async logOut(sessionToken: SessionToken) {
         var deleteSuccess = this.sessions.delete(sessionToken.toString())
 
         if (!deleteSuccess)
             throw new BadRequestError("The given session token is invalid.")
     }
 
-    authenticate(req: Request): User | undefined {
+    async authenticate(req: Request) {
         var authHeader = req.headers.authorization
 
         if (!authHeader)
