@@ -1,9 +1,12 @@
-<html>
+<html lang="en">
 
 <head>
     <link rel="stylesheet" href="../site_css/common.css">
-    <link rel="stylesheet" href="../site_css/sidebar.css">
     <link rel="stylesheet" href="css/index.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <title>ForumNet - Home</title>
 </head>
 
 <body>
@@ -22,28 +25,12 @@
                 alert(`An error occured while connecting to the ForumNet API: ${reason}`)
             })
     </script>
-    
+
+    <script src="/components/loader.js"></script>
+
     <div class="fill-parent">
         <div class="fill-parent hbox">
-            <div id="sidebar">
-                <span id="website-title-span" class="sidebar-item">ForumNet</span>
-                <hr/>
-                <a class="sidebar-item" href="/home">Home</a>
-                <a class="sidebar-item" href="/profile">Account</a>
-                <hr/>
-                <a class="sidebar-item" href="/forums">Forums</a>
-                <hr/>
-                <a class="sidebar-item" href="https://github.com/zeplar-exe/forumnet" target="_blank">
-                    <div class="hbox">
-                        <img src="/images/github-logo/github-mark.svg" alt="GitHub Logo"
-                            style="width: 45%; height: 45%; object-fit: contain; margin-right: 10px;"/>    
-                        GitHub
-                    </div>
-                </a>
-                <a class="sidebar-item" href="/tos">Terms of Service</a>
-                <a class="sidebar-item" href="/privacy">Privacy Policy</a>
-                <a class="sidebar-item copyright-item" href="/copyright">Copyright © 2023-2023 XXXXXX XXXXX</a>
-            </div>
+            <div id="sidebar-component"></div>
 
             <div id="main-content">
                 <button>Browse Forums</button>

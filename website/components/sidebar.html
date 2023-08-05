@@ -1,0 +1,70 @@
+<head>
+    <link rel="stylesheet" href="/site_css/common.css">
+
+    <style>
+        #sidebar {
+            width: 15%;
+            height: 100%;
+            background-color: #b5b5b5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sidebar > hr {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        .sidebar-item {
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #a3a3a3;
+            transition-duration: 0.3s;
+        }
+
+        a.sidebar-item {
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        a.sidebar-item:hover {
+            background-color: #7d7d7d;
+        }
+
+        .copyright-item {
+            margin-top: auto;
+        }
+
+        #website-title-span {
+            color: white;
+            font-size: xx-large;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+        }
+    </style>
+</head>
+
+<div id="sidebar">
+    <span id="website-title-span" class="sidebar-item">ForumNet</span>
+    <hr/>
+    <a class="sidebar-item" href="/home">Home</a>
+    <a class="sidebar-item" href="/profile">Account</a>
+    <hr/>
+    <a class="sidebar-item" href="/forums">Forums</a>
+    <hr/>
+    <a class="sidebar-item" href="https://github.com/zeplar-exe/forumnet" target="_blank">
+        <div class="hbox">
+            <img src="/images/github-logo/github-mark.svg" alt="GitHub Logo"
+                style="width: 45%; height: 45%; object-fit: contain; margin-right: 10px;"/>    
+            GitHub
+        </div>
+    </a>
+    <a class="sidebar-item" href="/tos">Terms of Service</a>
+    <a class="sidebar-item" href="/privacy">Privacy Policy</a>
+    <a class="sidebar-item copyright-item" href="/copyright">Copyright © 2023-2023 XXXXXX XXXXX</a>
+</div>
