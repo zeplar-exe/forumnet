@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express';
-import { ServiceProvider } from '../services/service_provider';
+import { ServiceProvider } from '../services/service_provider.js';
 import Joi from 'joi';
 import { createValidator } from 'express-joi-validation';
 
 const validator = createValidator({})
 
-export = function(serviceProvider: ServiceProvider) {
+export default function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     const signupSchema = Joi.object({
@@ -13,8 +13,8 @@ export = function(serviceProvider: ServiceProvider) {
         password: Joi.string().required()
     })
 
-    router.post("/auth/signup", validator.body(signupSchema), (req: Request, res: Response) => {
-        var sessionToken = serviceProvider.auth.signUp(req.body["identifier"], req.body["password"])
+    router.post("/auth/signup", validator.body(signupSchema), async (req: Request, res: Response) => {
+        var sessionToken = await serviceProvider.auth.signUp(req.body["identifier"], req.body["password"])
 
         res.status(200).json({ session_token: sessionToken })
     })

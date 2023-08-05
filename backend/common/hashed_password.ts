@@ -1,5 +1,5 @@
 import { pbkdf2Sync } from "crypto";
-import { InternalError } from "./http_error";
+import { InternalError } from "./http_error.js";
 
 export class HashedPassword {
     private static hashIterations = 10000
@@ -37,5 +37,9 @@ export class HashedPassword {
 
     static fromJSON(jsonString: string): HashedPassword {
         return HashedPassword.fromHashed(jsonString);
+    }
+
+    toString() {
+        return this.hashed
     }
 }

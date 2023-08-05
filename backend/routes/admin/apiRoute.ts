@@ -1,9 +1,9 @@
-import { UnauthorizedError } from '../../common/http_error';
+import { UnauthorizedError } from '../../common/http_error.js';
 import { Request, Response, Router } from 'express';
-import { UserRole } from '../../models/entities/user_role';
-import { ServiceProvider } from "../../services/service_provider"
+import { UserRole } from '../../models/enums/user_role.js';
+import { ServiceProvider } from "../../services/service_provider.js"
 
-export = function(serviceProvider: ServiceProvider) {
+export default function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     router.post("/admin/api/start_lockdown", async (req: Request, res: Response) => {

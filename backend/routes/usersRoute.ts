@@ -1,10 +1,10 @@
 import { Request, Response, Router } from 'express';
-import { ServiceProvider } from "../services/service_provider"
-import { UnauthorizedError } from '../common/http_error';
-import { orm } from 'db';
-import { ForumUser } from 'models/entities/forum_user';
+import { ServiceProvider } from "../services/service_provider.js"
+import { UnauthorizedError } from '../common/http_error.js';
+import { orm } from '../index.js';
+import { ForumUser } from '../models/entities/forum_user.js';
 
-export = function(serviceProvider: ServiceProvider) {
+export default function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     router.get("/users/me", async (req: Request, res: Response) => {

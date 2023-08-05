@@ -1,8 +1,8 @@
-import { orm } from "db";
-import { Forum } from "../models/entities/forum";
-import { User } from "../models/entities/user";
-import { UnauthorizedError } from "./http_error";
-import { ForumUser } from "../models/entities/forum_user";
+import { Forum } from "../models/entities/forum.js";
+import { User } from "../models/entities/user.js";
+import { UnauthorizedError } from "./http_error.js";
+import { ForumUser } from "../models/entities/forum_user.js";
+import { orm } from "../index.js";
 
 export async function requireUserCanAccessForum(user: User, forum: Forum): Promise<ForumUser> {
     var forumUser = await orm.em.findOne(ForumUser, { associated_user: user, forum: forum })

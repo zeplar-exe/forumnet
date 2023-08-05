@@ -1,15 +1,15 @@
 import { Request, Response, Router } from 'express';
-import { ServiceProvider } from "../services/service_provider"
+import { ServiceProvider } from "../services/service_provider.js"
 import { createValidator } from 'express-joi-validation';
 import Joi from 'joi';
-import { BadRequestError, ConflictError, UnauthorizedError } from '../common/http_error';
-import { orm } from 'db';
-import { ForumUser } from 'models/entities/forum_user';
-import { Forum } from 'models/entities/forum';
+import { BadRequestError, ConflictError, UnauthorizedError } from '../common/http_error.js';
+import { orm } from '../index.js';
+import { ForumUser } from '../models/entities/forum_user.js';
+import { Forum } from '../models/entities/forum.js';
 
 const validator = createValidator({})
 
-export = function(serviceProvider: ServiceProvider) {
+export default function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     router.get("/forum_users/:forum_user_id", async (req: Request, res: Response) => {

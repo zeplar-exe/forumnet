@@ -1,18 +1,18 @@
 import { Request, Response, Router } from 'express';
-import { ServiceProvider } from "../services/service_provider"
-import { BadRequestError, UnauthorizedError } from '../common/http_error';
+import { ServiceProvider } from "../services/service_provider.js"
+import { BadRequestError, UnauthorizedError } from '../common/http_error.js';
 import { createValidator } from 'express-joi-validation';
 import Joi from 'joi';
-import { requireUserCanAccessForum } from '../common/authorization';
-import { Forum } from '../models/entities/forum';
-import { ForumUser } from '../models/entities/forum_user';
-import { orm } from 'db';
-import { createLocationUrl } from '../common/location';
-import { Post } from '../models/entities/post';
+import { requireUserCanAccessForum } from '../common/authorization.js';
+import { Forum } from '../models/entities/forum.js';
+import { ForumUser } from '../models/entities/forum_user.js';
+import { createLocationUrl } from '../common/location.js';
+import { Post } from '../models/entities/post.js';
+import { orm } from '../index.js';
 
 const validator = createValidator({})
 
-export = function(serviceProvider: ServiceProvider) {
+export default function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     const searchSchema = Joi.object({

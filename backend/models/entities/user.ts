@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto"
-import { HashedPassword } from "../../common/hashed_password"
-import { UserRole } from "./user_role"
-import { UserID, UserIdentifier } from "../value_objects"
+import { HashedPassword } from "../../common/hashed_password.js"
+import { UserRole } from "../enums/user_role.js"
+import { UserID, UserIdentifier } from "../value_objects.js"
 import { Entity, Enum, PrimaryKey, Property } from "@mikro-orm/core"
 
 @Entity()

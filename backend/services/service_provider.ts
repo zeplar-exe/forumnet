@@ -1,9 +1,11 @@
-import { ApiService, ApiServiceImpl } from "./api_service"
-import { AuthService, AuthServiceImpl } from "./auth_service"
+import { ApiService, ApiServiceImpl } from "./api_service.js"
+import { AuthService, AuthServiceImpl } from "./auth_service.js"
 
 export interface ServiceProvider {
     auth: AuthService
     api: ApiService
+
+    init(): Promise<void>
 }
 
 export class ServiceProviderImpl implements ServiceProvider {
@@ -13,8 +15,10 @@ export class ServiceProviderImpl implements ServiceProvider {
     constructor() {
         this.auth = new AuthServiceImpl()
         this.api = new ApiServiceImpl()
+    }
 
-        this.auth.init()
-        this.api.init()
+    async init() {
+        await this.auth.init()
+        await this.api.init()
     }
 }

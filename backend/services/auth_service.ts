@@ -1,11 +1,11 @@
-import { HashedPassword } from "../common/hashed_password"
+import { HashedPassword } from "../common/hashed_password.js"
 import { Request } from "express"
-import { UserRole } from "../models/entities/user_role"
-import { User } from "../models/entities/user"
+import { UserRole } from "../models/enums/user_role.js"
+import { User } from "../models/entities/user.js"
 import { randomUUID } from "crypto"
-import { ConflictError, BadRequestError } from "../common/http_error"
-import { SessionToken, UserIdentifier } from "../models/value_objects"
-import { orm } from "db"
+import { ConflictError, BadRequestError } from "../common/http_error.js"
+import { SessionToken, UserIdentifier } from "../models/value_objects.js"
+import { orm } from "../index.js"
 
 export interface AuthService {
     init(): Promise<void>
@@ -18,16 +18,28 @@ export interface AuthService {
 export class AuthServiceImpl implements AuthService {
     sessions: Map<string, User>
 
-    async init() {
+    construtor() {
         this.sessions = new Map<string, User>()
+    }
+
+    async init() {
+        this.sessions = new Map<string, User>() // idfk the constructor doesn't run for some moronic reason?
 
         if (process.env.NODE_ENV === "dev") {
-            var user = new User("dev_admin", HashedPassword.fromPlainText("dev_woop"), UserRole.Owner)
+            var em = orm.em.fork()
+            var user = await em.findOne(User, { identifier: "dev_admin" })
+
+            if (!user) {
+                user = new User("dev_admin", HashedPassword.fromPlainText("dev_woop"), UserRole.Owner)
+
+                em.persistAndFlush(user)
+
+                console.log("Setup new dev_admin user account.")
+            }
+            
             this.sessions["dev"] = user
 
-            await orm.em.persistAndFlush(user)
-
-            console.log("Setup dev_admin user account.")
+            console.log("Setup dev_admin session (session_token: dev)")
         }
     }
 

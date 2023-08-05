@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto"
-import { CategoryName, PostID } from "../value_objects"
+import { CategoryName, PostID } from "../value_objects.js"
 import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/core"
-import { ForumUser } from "./forum_user"
-import { Forum } from "./forum"
+import { ForumUser } from "./forum_user.js"
+import { Forum } from "./forum.js"
 
 @Entity()
 export class Post {

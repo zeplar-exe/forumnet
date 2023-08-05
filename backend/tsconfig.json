@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "baseUrl": "./",
-        "module": "commonjs",
+        "module": "Node16",
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
@@ -14,7 +14,7 @@
         "strictNullChecks": true,
         "target": "ES2022",
         "outDir": "dist",
-        "moduleResolution": "node",
+        "moduleResolution": "Node16",
         "paths": {
             "common/*": [ "common/*" ],
             "models/*": [ "models/*" ],
@@ -30,5 +30,10 @@
     "exclude": [
         "node_modules", 
         ".vscode"
-    ]
+    ],
+
+    "ts-node": {
+        "esm": true,
+        "transpileOnly": true
+      }
 }
