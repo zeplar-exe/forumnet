@@ -1,5 +1,11 @@
+function insertComponent(component_name, html_uri) {
+    if ($(component_name).length) {
+        $.get(html_uri, data => {
+            $(component_name).replaceWith(data)
+        })
+    }
+}
+
 $(document).ready(() => {
-    $.get("/components/sidebar.html", data => {
-        $("#sidebar-component").replaceWith(data)
-    })
+    insertComponent("#sidebar-component", "/components/sidebar.html")
 })

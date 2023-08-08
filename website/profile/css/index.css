@@ -1,0 +1,20 @@
+#view-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-view {
+    width: 66%;
+    height: 66%;
+    outline-width: 1px;
+    outline-style: solid;
+    padding: 15px;
+}
+
+#user-identifier-display {
+    font-size: 3em;
+    font-weight: 200;
+    text-overflow: ellipsis;
+    width: 40%;
+}

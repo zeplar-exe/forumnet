@@ -1,0 +1,45 @@
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="../site_css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <title>ForumNet - Account</title>
+</head>
+
+<body>
+    <script>
+        fetch("http://localhost:7987/users/me", { 
+            method: "GET",
+            headers: {
+                Authorization: "Bearer dev"
+            }
+        }).then(async response => {
+            if (response.status !== 200) {
+                if (response.status === 401) {
+                    location.href = "/auth"
+                } else if (response.status === 403) {
+                    location.href = "/blocked"
+                }
+            }
+
+            var responseJson = await response.json()
+            
+            $("#user-identifier-display").text(responseJson["identifier"])
+        }).catch(reason => {
+
+        })
+    </script>
+
+    <script src="/components/loader.js"></script>
+
+    <div id="view-container" class="fill-parent">
+        <div id="profile-view">
+            <span id="user-identifier-display">Big Woop Identifier</span>
+        </div>
+    </div>
+</body>
+
+</html>
