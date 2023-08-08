@@ -12,7 +12,7 @@ export default function(serviceProvider: ServiceProvider) {
 
         if (!user)
             throw new UnauthorizedError()
-    
+        
         res.status(200).json(user)
     })
 
