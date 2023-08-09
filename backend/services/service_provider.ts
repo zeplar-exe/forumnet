@@ -1,24 +1,24 @@
-import { ApiService, ApiServiceImpl } from "./api_service.js"
+import { BackendConfig, BackendConfigImpl } from "./backend_config.js"
 import { AuthService, AuthServiceImpl } from "./auth_service.js"
 
 export interface ServiceProvider {
     auth: AuthService
-    api: ApiService
+    backend_config: BackendConfig
 
     init(): Promise<void>
 }
 
 export class ServiceProviderImpl implements ServiceProvider {
     auth: AuthService
-    api: ApiService
+    backend_config: BackendConfig
 
     constructor() {
         this.auth = new AuthServiceImpl()
-        this.api = new ApiServiceImpl()
+        this.backend_config = new BackendConfigImpl()
     }
 
     async init() {
         await this.auth.init()
-        await this.api.init()
+        await this.backend_config.init()
     }
 }

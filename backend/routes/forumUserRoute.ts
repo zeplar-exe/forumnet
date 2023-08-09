@@ -6,6 +6,7 @@ import { BadRequestError, ConflictError, UnauthorizedError } from '../common/htt
 import { orm } from '../index.js';
 import { ForumUser } from '../models/entities/forum_user.js';
 import { Forum } from '../models/entities/forum.js';
+import { requireUserAuthentication } from '../common/authorization.js';
 
 const validator = createValidator({})
 
@@ -13,11 +14,7 @@ export default function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     router.get("/forum_users/:forum_user_id", async (req: Request, res: Response) => {
-        var user = await serviceProvider.auth.authenticate(req)
-
-        if (!user)
-            throw new UnauthorizedError()
-
+        var user = await requireUserAuthentication(serviceProvider, req)
         var forumUser = await orm.em.findOne(ForumUser, { id: req.params.forum_user_id })
 
         if (!forumUser)
@@ -34,11 +31,7 @@ export default function(serviceProvider: ServiceProvider) {
     })
 
     router.post('/forum_users/create', validator.body(createSchema), async (req: Request, res: Response) => {
-        var user = await serviceProvider.auth.authenticate(req)
-
-        if (!user)
-            throw new UnauthorizedError()
-
+        var user = await requireUserAuthentication(serviceProvider, req)
         var forumId = req.body.forum
         var forum = await orm.em.findOne(Forum, { id: forumId })
 

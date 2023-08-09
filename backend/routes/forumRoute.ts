@@ -1,9 +1,9 @@
 import { Request, Response, Router } from 'express';
 import { ServiceProvider } from "../services/service_provider.js"
-import { BadRequestError, UnauthorizedError } from '../common/http_error.js';
+import { BadRequestError } from '../common/http_error.js';
 import { createValidator } from 'express-joi-validation';
 import Joi from 'joi';
-import { requireUserCanAccessForum } from '../common/authorization.js';
+import { requireUserAuthentication, requireUserCanAccessForum } from '../common/authorization.js';
 import { Forum } from '../models/entities/forum.js';
 import { ForumUser } from '../models/entities/forum_user.js';
 import { createLocationUrl } from '../common/location.js';
@@ -50,10 +50,7 @@ export default function(serviceProvider: ServiceProvider) {
     })
 
     router.post('/forums/create', validator.body(createSchema), async (req: Request, res: Response) => {
-        var user = await serviceProvider.auth.authenticate(req)
-
-        if (!user)
-            throw new UnauthorizedError()
+        var user = await requireUserAuthentication(serviceProvider, req)
         
         var forum = new Forum(req.body.name, req.body.description)
         var forumUser = new ForumUser(user, forum, "owner", "")
@@ -122,11 +119,7 @@ export default function(serviceProvider: ServiceProvider) {
     })
 
     router.post('/forums/:forum_id/posts/create', validator.body(createPostSchema), async (req: Request, res: Response) => {
-        var user = await serviceProvider.auth.authenticate(req)
-        
-        if (!user)
-            throw new UnauthorizedError()
-
+        var user = await requireUserAuthentication(serviceProvider, req)
         var forum = await orm.em.findOne(Forum, { id: req.params.forum_id })
 
         if (!forum)

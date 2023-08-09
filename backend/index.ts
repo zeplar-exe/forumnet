@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 
 import { ServiceProviderImpl } from "./services/service_provider.js"
-import { ServiceLayerError } from './common/http_error.js'
+import { ServiceLayerError, ServiceUnavailableError } from './common/http_error.js'
 import { UserRole } from './models/enums/user_role.js'
 import { RequestContext } from '@mikro-orm/core'
 import { MikroORM } from "@mikro-orm/core";
@@ -61,19 +61,18 @@ var defaultServiceProvider = new ServiceProviderImpl()
 await defaultServiceProvider.init()
 
 app.use(async (req: Request, res: Response, next: NextFunction) => {
-    if (await defaultServiceProvider.api.getLockdownStatus()) {
+    if (defaultServiceProvider.backend_config.maintainence_mode) {
         var user = await defaultServiceProvider.auth.authenticate(req)
 
         if (!user || user.role < UserRole.SiteAdmin) {
-            res.status(503).end()
-            return
+            throw new ServiceUnavailableError("The ForumNet backend is down for maintainence.")
         }
     }
     
     next()
 })
 
-import apiRoute from './routes/admin/apiRoute.js'
+import apiRoute from './routes/admin/backendRoute.js'
 import authRoute from './routes/authRoute.js'
 import forumRoute from './routes/forumRoute.js'
 import forumUserRoute from './routes/forumUserRoute.js'
