@@ -14,7 +14,7 @@ export class HashedPassword {
         if (!process.env.PASSWORD_SALT)
             throw new InternalError()
 
-        var salt = btoa(process.env.PASSWORD_SALT!)
+        var salt = Buffer.from(process.env.PASSWORD_SALT, "binary").toString("base64")
         var hash = pbkdf2Sync(plainText, salt, this.hashIterations, 64, "sha512")
 
         return new HashedPassword(hash.toString("base64"))
