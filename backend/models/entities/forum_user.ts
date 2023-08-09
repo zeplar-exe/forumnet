@@ -1,5 +1,5 @@
 import { ForumUserID } from "../value_objects.js"
-import { Entity, ManyToOne, OneToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
+import { Entity, ManyToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { User } from "./user.js"
 import { Forum } from "./forum.js"
 import ForumRole from "./forum_role.js"
@@ -10,14 +10,14 @@ export class ForumUser {
     @PrimaryKey({ type: "string" })
     id: ForumUserID
 
-    @ManyToOne()
+    @ManyToOne("User")
     associated_user: User
 
-    @OneToOne(() => Forum)
+    @ManyToOne("Forum")
     forum: Rel<Forum>
 
-    @ManyToOne()
-    role: ForumRole
+    @ManyToOne("ForumRole")
+    role: Rel<ForumRole>
 
     @Property()
     display_name: string

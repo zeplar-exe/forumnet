@@ -1,5 +1,5 @@
-import { Collection, Entity, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
-import { CategoryID } from "models/value_objects.js";
+import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core";
+import { CategoryID } from "../../models/value_objects.js";
 import { Forum } from "./forum.js";
 import { Post } from "./post.js";
 
@@ -11,12 +11,12 @@ export class Category {
     @Property()
     name: string
 
-    @OneToOne()
-    forum: Forum
+    @ManyToOne("Forum")
+    forum: Rel<Forum>
 
-    @OneToMany(() => Post, post => post.category)
+    @OneToMany("Post", "category")
     posts: Collection<Post>
 
-    @ManyToOne({ nullable: true })
+    @ManyToOne("Category", { nullable: true })
     parent_category: Category | null
 }

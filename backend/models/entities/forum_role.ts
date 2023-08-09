@@ -1,7 +1,8 @@
-import { Collection, ManyToOne, OneToMany, PrimaryKey, Property } from "@mikro-orm/core"
+import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { Forum } from "./forum.js"
 import { ForumUser } from "./forum_user.js"
 
+@Entity()
 export default class ForumRole {
     @PrimaryKey()
     id: string
@@ -12,8 +13,8 @@ export default class ForumRole {
     @Property()
     description: string
 
-    @ManyToOne()
-    forum: Forum
+    @ManyToOne("Forum")
+    forum: Rel<Forum>
 
     @Property({ type: "int" })
     precedence: number

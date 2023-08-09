@@ -23,13 +23,13 @@ export class Forum {
     @Property({ nullable: true })
     owner: Rel<ForumUser | undefined>
 
-    @OneToMany(() => ForumRole, role => role.forum)
+    @OneToMany("ForumRole", "forum")
     roles: Collection<ForumRole>
 
-    @OneToMany(() => Category, category => category.forum)
+    @OneToMany("Category", "forum")
     categories: Collection<Category>
 
-    @OneToMany(() => Post, post => post.forum)
+    @OneToMany("Post", "forum")
     posts: Collection<Post>
 
     constructor(name: string, description: string) {

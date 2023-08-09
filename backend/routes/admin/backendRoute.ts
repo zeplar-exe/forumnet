@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { UserRole } from '../../models/enums/user_role.js';
 import { ServiceProvider } from "../../services/service_provider.js"
-import { requireUserAuthentication, requireUserMeetsRole } from 'common/authorization.js';
+import { requireUserAuthentication, requireUserMeetsRole } from '../../common/authorization.js';
 
 export default function(serviceProvider: ServiceProvider) {
     const router = Router()

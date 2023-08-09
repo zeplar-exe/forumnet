@@ -1,5 +1,5 @@
 import { PostID } from "../value_objects.js"
-import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/core"
+import { Entity, ManyToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { ForumUser } from "./forum_user.js"
 import { Forum } from "./forum.js"
 import { Category } from "./category.js"
@@ -16,14 +16,14 @@ export class Post {
     @Property()
     body: string
 
-    @OneToOne()
-    category: Category
+    @ManyToOne("Category")
+    category: Rel<Category>
 
-    @OneToOne()
-    forum: Forum
+    @ManyToOne("Forum")
+    forum: Rel<Forum>
 
-    @ManyToOne()
-    author: ForumUser
+    @ManyToOne("ForumUser")
+    author: Rel<ForumUser>
 
     @Property()
     hidden: boolean

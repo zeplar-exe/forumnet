@@ -19,7 +19,7 @@ export class User {
     @Enum()
     role: UserRole
 
-    @OneToMany(() => ForumUser, user => user.associated_user)
+    @OneToMany("ForumUser", "associated_user")
     forum_users: Collection<ForumUser>
     
     constructor(identifier: UserIdentifier, password: HashedPassword, role: UserRole) {

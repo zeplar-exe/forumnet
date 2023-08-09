@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from "express"
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import mikroOrmConfig from './mikro-orm.config.js'
 
 import { ServiceProviderImpl } from "./services/service_provider.js"
 import { ServiceLayerError, ServiceUnavailableError } from './common/http_error.js'
@@ -31,17 +32,7 @@ var ready = false
 
 async function setup()
 {
-    orm = await MikroORM.init<MariaDbDriver>({
-        entities: [ "./dist/models/entities" ],
-        entitiesTs: [ "./models/entities" ],
-        name: "forumnet.maria.db",
-        dbName: "forumnet",
-        type: "mariadb",
-        host: process.env.MARIADB_HOST,
-        port: parseInt(process.env.MARIADB_PORT ?? "error"),
-        user: process.env.MARIADB_USER,
-        password: process.env.MARIADB_PASSWORD
-    }).catch(
+    orm = await MikroORM.init<MariaDbDriver>(mikroOrmConfig).catch(
         failure_reason => { throw new Error(`Failed to initialize MikroORM with MariaDB: ${failure_reason}`) }
     )
 }
@@ -77,7 +68,7 @@ import authRoute from './routes/authRoute.js'
 import forumRoute from './routes/forumRoute.js'
 import forumUserRoute from './routes/forumUserRoute.js'
 import usersRoute from './routes/usersRoute.js'
-import postsRoute from 'routes/postsRoute.js'
+import postsRoute from './routes/postsRoute.js'
 
 app.use("/", apiRoute(defaultServiceProvider))
 app.use("/", authRoute(defaultServiceProvider))
@@ -105,4 +96,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     }
 })
 
-app.listen(parseInt(process.env.PORT), "localhost", () => console.log(`forumnet-api (express) listening on port ${process.env.PORT}`))
+// app.listen(parseInt(process.env.PORT), "localhost", () => console.log(`forumnet-api (express) listening on port ${process.env.PORT}`))

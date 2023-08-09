@@ -5,7 +5,7 @@ import { User } from "../models/entities/user.js"
 import { ConflictError, BadRequestError } from "../common/http_error.js"
 import { SessionToken, UserIdentifier } from "../models/value_objects.js"
 import { orm } from "../index.js"
-import { base64uuid } from "common/custom_uuid.js"
+import { base64uuid } from "../common/custom_uuid.js"
 
 export interface AuthService {
     init(): Promise<void>
