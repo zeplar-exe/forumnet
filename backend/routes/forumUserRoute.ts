@@ -22,6 +22,28 @@ export default function(serviceProvider: ServiceProvider) {
         res.status(200).json(forumUser)
     })
 
+    const patchForumUserSchema = Joi.object({
+        display_name: Joi.string().optional(),
+        biography: Joi.string().optional()
+    })
+
+    router.patch("/forum_users/:forum_user_id", validator.body(patchForumUserSchema), async (req: Request, res: Response) => {
+        var forumUser = await orm.em.findOne(ForumUser, { id: req.params.forum_user_id })
+
+        if (!forumUser)
+            throw new BadRequestError("The given forum user does not exist.")
+
+        if (req.body.display_name)
+            forumUser.display_name = req.body.display_name
+
+        if (req.body.biography)
+            forumUser.biography = req.body.biography
+
+        await orm.em.persistAndFlush(forumUser)
+
+        res.status(200).json(forumUser)
+    })
+
     const createSchema = Joi.object({
         forum: Joi.string().required(),
         display_name: Joi.string().required(),
@@ -46,7 +68,7 @@ export default function(serviceProvider: ServiceProvider) {
 
         await orm.em.persistAndFlush(forumUser)
 
-        res.status(200)
+        res.status(201)
             .setHeader("Location", `/forum_users/${forumUser.id}`)
             .json({ forum_user: forumUser })
     })
