@@ -2,7 +2,8 @@ import { randomUUID } from "crypto"
 import { HashedPassword } from "../../common/hashed_password.js"
 import { UserRole } from "../enums/user_role.js"
 import { UserID, UserIdentifier } from "../value_objects.js"
-import { Entity, Enum, PrimaryKey, Property } from "@mikro-orm/core"
+import { Collection, Entity, Enum, OneToMany, PrimaryKey, Property } from "@mikro-orm/core"
+import { ForumUser } from "./forum_user.js"
 
 @Entity()
 export class User {
@@ -17,6 +18,9 @@ export class User {
 
     @Enum()
     role: UserRole
+
+    @OneToMany(() => ForumUser, user => user.associated_user)
+    forum_users: Collection<ForumUser>
     
     constructor(identifier: UserIdentifier, password: HashedPassword, role: UserRole) {
         this.id = randomUUID()

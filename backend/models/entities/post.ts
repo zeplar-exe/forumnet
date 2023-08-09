@@ -1,8 +1,9 @@
 import { randomUUID } from "crypto"
-import { CategoryName, PostID } from "../value_objects.js"
+import { PostID } from "../value_objects.js"
 import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/core"
 import { ForumUser } from "./forum_user.js"
 import { Forum } from "./forum.js"
+import { Category } from "./category.js"
 
 @Entity()
 export class Post {
@@ -15,8 +16,8 @@ export class Post {
     @Property()
     body: string
 
-    @Property({ type: "string" })
-    category: CategoryName
+    @OneToOne()
+    category: Category
 
     @OneToOne()
     forum: Forum
@@ -24,16 +25,20 @@ export class Post {
     @ManyToOne()
     author: ForumUser
 
+    @Property()
+    hidden: boolean
+
     @Property({ type: "datetime" })
     creation_date: Date
 
-    constructor(title: string, body: string, category: CategoryName, forum: Forum, author: ForumUser) {
+    constructor(title: string, body: string, category: Category, forum: Forum, author: ForumUser) {
         this.id = randomUUID()
         this.title = title
         this.body = body
         this.category = category
         this.forum = forum
         this.author = author
+        this.hidden = false
         this.creation_date = new Date()
     }
 }

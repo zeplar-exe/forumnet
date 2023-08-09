@@ -1,7 +1,10 @@
 import { randomUUID } from "crypto"
 import { ForumID } from "../value_objects.js"
-import { Entity, ManyToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
+import { Collection, Entity, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { ForumUser } from "./forum_user.js"
+import ForumRole from "./forum_role.js"
+import { Post } from "./post.js"
+import { Category } from "./category.js"
 
 @Entity()
 export class Forum {
@@ -17,8 +20,17 @@ export class Forum {
     @Property({ type: "datetime" })
     creation_date: Date
 
-    @ManyToOne(() => ForumUser, { nullable: true })
+    @Property({ nullable: true })
     owner: Rel<ForumUser | undefined>
+
+    @OneToMany(() => ForumRole, role => role.forum)
+    roles: Collection<ForumRole>
+
+    @OneToMany(() => Category, category => category.forum)
+    categories: Collection<Category>
+
+    @OneToMany(() => Post, post => post.forum)
+    posts: Collection<Post>
 
     constructor(name: string, description: string) {
         this.id = randomUUID()
