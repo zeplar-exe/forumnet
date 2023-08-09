@@ -1,10 +1,10 @@
-import { randomUUID } from "crypto"
 import { ForumID } from "../value_objects.js"
 import { Collection, Entity, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { ForumUser } from "./forum_user.js"
 import ForumRole from "./forum_role.js"
 import { Post } from "./post.js"
 import { Category } from "./category.js"
+import { base64uuid } from "../../common/custom_uuid.js"
 
 @Entity()
 export class Forum {
@@ -33,7 +33,7 @@ export class Forum {
     posts: Collection<Post>
 
     constructor(name: string, description: string) {
-        this.id = randomUUID()
+        this.id = base64uuid()
         this.name = name
         this.description = description
         this.creation_date = new Date()

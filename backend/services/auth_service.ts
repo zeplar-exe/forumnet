@@ -2,10 +2,10 @@ import { HashedPassword } from "../common/hashed_password.js"
 import { Request } from "express"
 import { UserRole } from "../models/enums/user_role.js"
 import { User } from "../models/entities/user.js"
-import { randomUUID } from "crypto"
 import { ConflictError, BadRequestError } from "../common/http_error.js"
 import { SessionToken, UserIdentifier } from "../models/value_objects.js"
 import { orm } from "../index.js"
+import { base64uuid } from "common/custom_uuid.js"
 
 export interface AuthService {
     init(): Promise<void>
@@ -113,7 +113,7 @@ export class AuthServiceImpl implements AuthService {
     }
     
     private createSessionToken() {
-        return randomUUID() + "-" + randomUUID() + "-" + randomUUID()
+        return base64uuid() + "-" + base64uuid() + "-" + base64uuid()
         //  ¯\_(ツ)_/¯
     }
 }

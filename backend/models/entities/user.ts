@@ -1,9 +1,9 @@
-import { randomUUID } from "crypto"
 import { HashedPassword } from "../../common/hashed_password.js"
 import { UserRole } from "../enums/user_role.js"
 import { UserID, UserIdentifier } from "../value_objects.js"
 import { Collection, Entity, Enum, OneToMany, PrimaryKey, Property } from "@mikro-orm/core"
 import { ForumUser } from "./forum_user.js"
+import { base64uuid } from "../../common/custom_uuid.js"
 
 @Entity()
 export class User {
@@ -23,7 +23,7 @@ export class User {
     forum_users: Collection<ForumUser>
     
     constructor(identifier: UserIdentifier, password: HashedPassword, role: UserRole) {
-        this.id = randomUUID()
+        this.id = base64uuid()
         this.identifier = identifier
         this.password = password
         this.role = role

@@ -3,8 +3,7 @@ import { ServiceProvider } from "../services/service_provider.js"
 import { BadRequestError, ForbiddenError } from '../common/http_error.js';
 import { createValidator } from 'express-joi-validation';
 import Joi from 'joi';
-import { requireUserAuthentication, requireUserCanAccessForum } from '../common/authorization.js';
-import { Forum } from '../models/entities/forum.js';
+import { requireUserAuthentication } from '../common/authorization.js';
 import { Post } from '../models/entities/post.js';
 import { orm } from '../index.js';
 

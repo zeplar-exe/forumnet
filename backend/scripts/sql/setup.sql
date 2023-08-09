@@ -23,8 +23,7 @@ CREATE TABLE IF NOT EXISTS forum_user(
     associated_user VARCHAR(36) NOT NULL,
     forum VARCHAR(36) NOT NULL,
     display_name TEXT NOT NULL,
-    biography TEXT NOT NULL,
-    links TEXT NOT NULL
+    biography TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS post(
