@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
 import { ServiceProvider } from "../services/service_provider.js"
-import { UnauthorizedError } from '../common/http_error.js';
 import { orm } from '../index.js';
 import { ForumUser } from '../models/entities/forum_user.js';
 import { requireUserAuthentication } from '../common/authorization.js';

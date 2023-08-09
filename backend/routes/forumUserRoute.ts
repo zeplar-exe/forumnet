@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { ServiceProvider } from "../services/service_provider.js"
 import { createValidator } from 'express-joi-validation';
 import Joi from 'joi';
-import { BadRequestError, ConflictError, UnauthorizedError } from '../common/http_error.js';
+import { BadRequestError, ConflictError } from '../common/http_error.js';
 import { orm } from '../index.js';
 import { ForumUser } from '../models/entities/forum_user.js';
 import { Forum } from '../models/entities/forum.js';
@@ -14,7 +14,6 @@ export default function(serviceProvider: ServiceProvider) {
     const router = Router()
 
     router.get("/forum_users/:forum_user_id", async (req: Request, res: Response) => {
-        var user = await requireUserAuthentication(serviceProvider, req)
         var forumUser = await orm.em.findOne(ForumUser, { id: req.params.forum_user_id })
 
         if (!forumUser)
