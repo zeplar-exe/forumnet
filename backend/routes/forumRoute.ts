@@ -18,8 +18,8 @@ export default function(serviceProvider: ServiceProvider) {
     const searchSchema = Joi.object({
         page: Joi.number().integer().min(1).default(1),
         count: Joi.number().integer().min(1).max(100).default(10),
-        name: Joi.string().required(),
-        description: Joi.string().optional().default("")
+        name: Joi.string().required().min(3).max(32),
+        description: Joi.string().optional().default("").max(2000)
     })
 
     router.get('/forums/search', validator.query(searchSchema), async (req: Request, res: Response) => {
@@ -113,12 +113,12 @@ export default function(serviceProvider: ServiceProvider) {
         })
 
     const createPostSchema = Joi.object({
-        title: Joi.string().required(),
-        body: Joi.string().required(),
+        title: Joi.string().required().min(12).max(140),
+        body: Joi.string().required().min(50).max(40000),
         category: Joi.string().required()
     })
 
-    router.post('/forums/:forum_id/posts/create', validator.body(createPostSchema), async (req: Request, res: Response) => {
+    router.post('forums/:forum_id/posts/create', validator.body(createPostSchema), async (req: Request, res: Response) => {
         var user = await requireUserAuthentication(serviceProvider, req)
         var forum = await orm.em.findOne(Forum, { id: req.params.forum_id })
 
@@ -138,15 +138,6 @@ export default function(serviceProvider: ServiceProvider) {
         res.status(201)
             .setHeader("Location", `/forums/${forum.id}/posts/${post.id}`)
             .json({ post: post.id })
-    })
-
-    router.get('/forums/:forum_id/posts/:post_id', async (req: Request, res: Response) => {
-        var post = await orm.em.findOne(Post, { id: req.params.post_id })
-
-        if (!post)
-            throw new BadRequestError("The given post does not exist.")
-
-        res.status(200).json(post)
     })
     
     return router
