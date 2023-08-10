@@ -1,7 +1,7 @@
 import { ForumID } from "../value_objects.js"
-import { Collection, Entity, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core"
+import { Collection, Entity, OneToMany, OneToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { ForumUser } from "./forum_user.js"
-import ForumRole from "./forum_role.js"
+import { ForumRole } from "./forum_role.js"
 import { Post } from "./post.js"
 import { Category } from "./category.js"
 import { base64uuid } from "../../common/custom_uuid.js"
@@ -25,6 +25,9 @@ export class Forum {
 
     @OneToMany("ForumRole", "forum")
     roles: Collection<ForumRole>
+
+    @OneToOne("ForumRole")
+    default_role: ForumRole
 
     @OneToMany("Category", "forum")
     categories: Collection<Category>

@@ -64,7 +64,7 @@ export default function(serviceProvider: ServiceProvider) {
         if (existingUsers && existingUsers.find(user => user.forum.id == forumId))
             throw new ConflictError("A forum user for this account already exists.")
 
-        var forumUser = new ForumUser(user, forum, req.body.display_name, req.body.biography)
+        var forumUser = new ForumUser(user, forum, forum.default_role, req.body.display_name, req.body.biography)
 
         await orm.em.persistAndFlush(forumUser)
 

@@ -2,7 +2,7 @@ import { ForumUserID } from "../value_objects.js"
 import { Entity, ManyToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { User } from "./user.js"
 import { Forum } from "./forum.js"
-import ForumRole from "./forum_role.js"
+import { ForumRole } from "./forum_role.js"
 import { base64uuid } from "../../common/custom_uuid.js"
 
 @Entity()
@@ -25,10 +25,14 @@ export class ForumUser {
     @Property()
     biography: string
 
-    constructor(associated_user: User, forum: Forum, display_name: string, biography: string) {
+    @Property()
+    links: string
+
+    constructor(associated_user: User, forum: Forum, role: ForumRole, display_name: string, biography: string) {
         this.id = base64uuid()
         this.associated_user = associated_user
         this.forum = forum
+        this.role = role
         this.display_name = display_name
         this.biography = biography
     }
