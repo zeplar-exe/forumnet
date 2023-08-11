@@ -7,7 +7,7 @@ export class Audit {
     @PrimaryKey()
     id: string
     
-    @Enum()
+    @Enum({ type: "smallint" })
     type: AuditType
 
     @Property({ type: "datetime" })

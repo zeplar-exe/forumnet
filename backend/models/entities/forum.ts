@@ -40,5 +40,10 @@ export class Forum {
         this.name = name
         this.description = description
         this.creation_date = new Date()
+        this.roles = new Collection<ForumRole>(this)
+        this.default_role = new ForumRole("Default", "The default role.", this, 0);
+        this.roles.add(this.default_role)
+        this.categories = new Collection<Category>(this)
+        this.posts = new Collection<Post>(this)
     }
 }

@@ -62,6 +62,7 @@ export class ForumRole {
         this.description = description
         this.forum = forum
         this.precedence = precedence
+        this.forum_users = new Collection<ForumUser>(this)
         this.creation_date = new Date()
     }
 } 

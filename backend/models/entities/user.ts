@@ -16,7 +16,7 @@ export class User {
     @Property({ type: "string" })
     password: HashedPassword
 
-    @Enum()
+    @Enum({ type: "smallint" })
     role: UserRole
 
     @OneToMany("ForumUser", "associated_user")
@@ -27,5 +27,6 @@ export class User {
         this.identifier = identifier
         this.password = password
         this.role = role
+        this.forum_users = new Collection<ForumUser>(this)
     }
 }

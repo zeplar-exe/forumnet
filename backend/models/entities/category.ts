@@ -29,6 +29,7 @@ export class Category {
         this.name = name
         this.description = description
         this.forum = forum
+        this.posts = new Collection<Post>(this)
         this.parent_category = parent_category
     }
 }
