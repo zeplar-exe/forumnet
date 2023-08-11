@@ -1,5 +1,5 @@
 import { Entity, Enum, PrimaryKey, Property } from "@mikro-orm/core";
-import { base64uuid } from "../../common/custom_uuid.js";
+import { base64uuid } from "~/common/custom_uuid.js";
 import { AuditType } from "../enums/audit_type.js";
 
 @Entity()

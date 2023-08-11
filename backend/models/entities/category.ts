@@ -1,8 +1,8 @@
 import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core";
-import { CategoryID } from "../../models/value_objects.js";
+import { CategoryID } from "~/models/value_objects.js";
 import { Forum } from "./forum.js";
 import { Post } from "./post.js";
-import { base64uuid } from "../../common/custom_uuid.js";
+import { base64uuid } from "~/common/custom_uuid.js";
 
 @Entity()
 export class Category {

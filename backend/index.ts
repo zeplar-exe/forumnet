@@ -63,19 +63,17 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     next()
 })
 
-import apiRoute from './routes/admin/backendRoute.js'
-import authRoute from './routes/authRoute.js'
-import forumRoute from './routes/forumRoute.js'
-import forumUserRoute from './routes/forumUserRoute.js'
-import usersRoute from './routes/usersRoute.js'
-import postsRoute from './routes/postsRoute.js'
+import apiRoute from '~/routes/admin/backendRoute.js'
+import authRoute from '~/routes/authRoute.js'
+import forumRoute from '~/routes/forums/index.js'
+import forumUserRoute from '~/routes/forumUserRoute.js'
+import usersRoute from '~/routes/usersRoute.js'
 
 app.use("/", apiRoute(defaultServiceProvider))
 app.use("/", authRoute(defaultServiceProvider))
 app.use("/", forumRoute(defaultServiceProvider))
 app.use("/", forumUserRoute(defaultServiceProvider))
 app.use("/", usersRoute(defaultServiceProvider))
-app.use("/", postsRoute(defaultServiceProvider))
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.log(err)

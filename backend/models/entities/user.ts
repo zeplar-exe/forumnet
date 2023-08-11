@@ -1,9 +1,9 @@
-import { HashedPassword } from "../../common/hashed_password.js"
+import { HashedPassword } from "~/common/hashed_password.js"
 import { UserRole } from "../enums/user_role.js"
 import { UserID, UserIdentifier } from "../value_objects.js"
 import { Collection, Entity, Enum, OneToMany, PrimaryKey, Property } from "@mikro-orm/core"
 import { ForumUser } from "./forum_user.js"
-import { base64uuid } from "../../common/custom_uuid.js"
+import { base64uuid } from "~/common/custom_uuid.js"
 
 @Entity()
 export class User {

@@ -3,7 +3,7 @@ import { Entity, ManyToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { User } from "./user.js"
 import { Forum } from "./forum.js"
 import { ForumRole } from "./forum_role.js"
-import { base64uuid } from "../../common/custom_uuid.js"
+import { base64uuid } from "~/common/custom_uuid.js"
 
 @Entity()
 export class ForumUser {

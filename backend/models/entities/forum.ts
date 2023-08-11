@@ -4,7 +4,7 @@ import { ForumUser } from "./forum_user.js"
 import { ForumRole } from "./forum_role.js"
 import { Post } from "./post.js"
 import { Category } from "./category.js"
-import { base64uuid } from "../../common/custom_uuid.js"
+import { base64uuid } from "~/common/custom_uuid.js"
 
 @Entity()
 export class Forum {

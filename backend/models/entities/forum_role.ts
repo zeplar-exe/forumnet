@@ -1,7 +1,7 @@
 import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core"
 import { Forum } from "./forum.js"
 import { ForumUser } from "./forum_user.js"
-import { base64uuid } from "../../common/custom_uuid.js"
+import { base64uuid } from "~/common/custom_uuid.js"
 
 @Entity()
 export class ForumRole {

@@ -5,9 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx ts-patch install && npx tsc",
     "start": "cross-env NODE_ENV=prod node dist/index.js",
-    "dev": "concurrently \"cross-env NODE_ENV=dev npx tsc --watch\" \"cross-env NODE_ENV=dev nodemon -q dist/index.js\""
+    "dev": "concurrently \"cross-env NODE_ENV=dev npx ts-patch install -s && npx tsc --watch\" \"cross-env NODE_ENV=dev nodemon -q dist/index.js\""
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,9 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
-    "@types/node": "^20.4.2"
+    "@types/node": "^20.4.2",
+    "ts-patch": "^3.0.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript-transform-paths": "^3.4.6"
   }
 }

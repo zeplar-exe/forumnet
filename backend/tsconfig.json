@@ -18,7 +18,23 @@
 
         "sourceMap": true,
         
-        "outDir": "dist"
+        "outDir": "dist",
+
+        "paths":{
+            "~/*": [
+               "./*"
+            ]
+         },
+
+        "plugins": [
+            {
+                "transform":"typescript-transform-paths"
+            },
+            {
+                "transform":"typescript-transform-paths",
+                "afterDeclarations": true
+            }
+        ]
     },
 
     "include": [
