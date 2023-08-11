@@ -76,7 +76,6 @@ app.use("/", forumUserRoute(defaultServiceProvider))
 app.use("/", usersRoute(defaultServiceProvider))
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log(err)
     if (err instanceof ServiceLayerError) {
         var serviceLayerError = err as ServiceLayerError
         
@@ -86,8 +85,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
             res.json({ message: err.message })
 
         res.end()
-
-        return
     }
     else {
         next()

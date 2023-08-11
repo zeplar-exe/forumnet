@@ -90,9 +90,9 @@ export default function(serviceProvider: ServiceProvider) {
     })
 
     const editPostSchema = Joi.object({
-        title: Joi.string().optional().min(12).max(140).default(undefined),
-        body: Joi.string().optional().min(50).max(40000).default(undefined),
-        category: Joi.string().optional().default(undefined)
+        title: Joi.string().optional().min(12).max(140).default(null),
+        body: Joi.string().optional().min(50).max(40000).default(null),
+        category: Joi.string().optional().default(null)
     })
 
     router.patch('/:forum_id/posts/:post_id/', validator.body(editPostSchema), async (req: Request, res: Response) => {

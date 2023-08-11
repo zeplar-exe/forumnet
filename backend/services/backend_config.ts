@@ -18,8 +18,10 @@ export class BackendConfigImpl implements BackendConfig {
     async init() {
         const configFile = "backend_config.json"
 
+        return // disabled temporarily
+
         if (!existsSync(configFile))
-            writeFile(configFile, "", (err) => { throw err })
+            writeFile(configFile, "{}", (err) => { throw err })
 
         readFile(configFile, "utf-8", (err, data) => {
             if (err) throw err

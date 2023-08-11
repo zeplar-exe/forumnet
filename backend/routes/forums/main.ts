@@ -5,7 +5,6 @@ import { createValidator } from "express-joi-validation"
 import { orm } from "~/index.js"
 import Joi from "joi"
 import { Forum } from "~/models/entities/forum.js"
-import { ForumRole } from "~/models/entities/forum_role.js"
 import { ForumUser } from "~/models/entities/forum_user.js"
 import { ServiceProvider } from "~/services/service_provider.js"
 import { BadRequestError } from "~/common/http_error.js"
@@ -53,22 +52,20 @@ export default function(serviceProvider: ServiceProvider) {
         var user = await requireUserAuthentication(serviceProvider, req)
         
         var forum = new Forum(req.body.name, req.body.description)
-        var defaultRole = new ForumRole("Default", "The default role.", forum, 0);
-        var forumUser = new ForumUser(user, forum, defaultRole, "Owner", "")
-        forum.owner = forumUser
-        forum.default_role = defaultRole
-
+        var owner = new ForumUser(user, forum, forum.default_role, "Owner", "")
+        forum.owner = owner
+        owner.role = forum.default_role
+        
         orm.em.persist(forum)
-        orm.em.persist(defaultRole)
-        orm.em.persist(forumUser)
+        orm.em.persist(forum.default_role)
 
-        orm.em.flush()
+        await orm.em.flush()
 
         res.status(201)
             .setHeader("Location", `${createLocationUrl(req)}/forums/${forum.id}`)
             .json({ 
                 forum: forum,
-                forum_user: forumUser
+                forum_user: owner
             })
     })
 

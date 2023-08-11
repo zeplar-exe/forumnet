@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "npx ts-patch install && npx tsc",
     "start": "cross-env NODE_ENV=prod node dist/index.js",
