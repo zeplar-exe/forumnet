@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config() // I'm assuming MikroORM is doing some bs under the hood in order to run before index.ts, so this is required
+
 import { Logger } from '@nestjs/common';
 
 const logger = new Logger('MikroORM');
